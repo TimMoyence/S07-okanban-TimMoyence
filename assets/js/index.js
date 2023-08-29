@@ -1,4 +1,4 @@
-// Ton code JavaScript ici !
+// Ton code JavaScript ici ! 
 
 // --------------------------------------
 // Event Listening (sélection d'élément et mise en écoute d'évènement)
