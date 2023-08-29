@@ -52,7 +52,12 @@ function handleAddListFormSubmit(event){
 
   const addListFormData = new FormData(addListFormElement);
   const listToAdd = Object.fromEntries(addListFormData);
-  console.log(listToAdd);
+  addListToListsContainer(listToAdd);
+
+  // on réinitialise le formulaire
+  addListFormElement.reset();
+  // on ferme les modales
+  closeModals();
 }
 
 // --------------------------------------
@@ -74,8 +79,25 @@ function closeModals(){
   });
 }
 
-function addListToListsContainer(){
+function addListToListsContainer(list){
+  console.log(list);
 
+  // on récupèrele template
+  const listTemplate = document.querySelector('#list-template');
+  // on accède à son contenu
+  const listTemplateContent = listTemplate.content;
+  // on en crée une copie
+  const clonedListTemplate = listTemplateContent.cloneNode(true);
+
+  // on modifie le tempalte avec les infos de la liste à créer
+  const slotListNameElement = clonedListTemplate.querySelector("[slot='list-name']");
+  console.log(slotListNameElement);
+  slotListNameElement.textContent = list.name;
+
+  // on récupère le container de liste
+  const listsContainerElement = document.querySelector('#lists-container');
+  // on ajoute la copie du template
+  listsContainerElement.append(clonedListTemplate);
 }
 
 // --------------------------------------
