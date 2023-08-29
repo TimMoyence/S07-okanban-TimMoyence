@@ -11,11 +11,30 @@ function listenToClickOnAddListButton(){
   addListButtonElement.addEventListener("click", handleAddListButtonClick);
 }
 
+function listenToClickOnModalClosingElements(){
+  // récupérer les boutons concernés
+  const closeElementList = document.querySelectorAll('.modal .close, .modal .modal-background');
+
+  // associer un écouteur d'évènement
+  closeElementList.forEach((closeElement) => {
+    closeElement.addEventListener('click', handleCloseModalClick);
+  });
+}
+
+function listenToUserActions(){
+  listenToClickOnAddListButton();
+  listenToClickOnModalClosingElements();
+}
+
 // --------------------------------------
 // Event Handler (écouteurs d'évènements)
 // --------------------------------------
 function handleAddListButtonClick(){
   openAddListModal();
+}
+
+function handleCloseModalClick(){
+  closeModals();
 }
 
 // --------------------------------------
@@ -29,7 +48,17 @@ function openAddListModal(){
   addListModalElement.classList.add('is-active');
 }
 
+function closeModals(){
+  const modalElementList = document.querySelectorAll('.modal');
+
+  modalElementList.forEach((modalElement) => {
+    modalElement.classList.remove('is-active');
+  });
+}
+
 // --------------------------------------
 // Lancement des fonctions d'event listening
 // --------------------------------------
-listenToClickOnAddListButton();
+document.addEventListener('DOMContentLoaded', () => {
+  listenToUserActions();
+});
