@@ -21,10 +21,18 @@ function listenToClickOnModalClosingElements(){
   });
 }
 
+function listenToSubmitOnAddListForm(){
+  const addListFormElement = document.querySelector('#add-list-modal form');
+
+  addListFormElement.addEventListener('submit', handleAddListFormSubmit);
+}
+
 function listenToUserActions(){
   listenToClickOnAddListButton();
   listenToClickOnModalClosingElements();
+  listenToSubmitOnAddListForm();
 }
+
 
 // --------------------------------------
 // Event Handler (écouteurs d'évènements)
@@ -35,6 +43,16 @@ function handleAddListButtonClick(){
 
 function handleCloseModalClick(){
   closeModals();
+}
+
+function handleAddListFormSubmit(event){
+  event.preventDefault();
+
+  const addListFormElement = document.querySelector('#add-list-modal form');
+
+  const addListFormData = new FormData(addListFormElement);
+  const listToAdd = Object.fromEntries(addListFormData);
+  console.log(listToAdd);
 }
 
 // --------------------------------------
@@ -54,6 +72,10 @@ function closeModals(){
   modalElementList.forEach((modalElement) => {
     modalElement.classList.remove('is-active');
   });
+}
+
+function addListToListsContainer(){
+
 }
 
 // --------------------------------------
