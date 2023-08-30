@@ -8,9 +8,9 @@
 let apiBaseUrl = "http://localhost:5001";
 let listUrl = apiBaseUrl + "/" + "lists";
 let cardUrl = apiBaseUrl + "/" + "cards";
-async function getListsFromAPI() {
 
-  
+
+async function getListsFromAPI() {
   const listResponse = await fetch(listUrl);
   if(listResponse.ok){
     const listArray = await listResponse.json();
