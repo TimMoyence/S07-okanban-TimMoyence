@@ -89,7 +89,7 @@ export function addCardToList(card){
   // on modifie le template avec les infos de la carte à créer
   // description de la carte :
   const slotCardDescriptionElement = clonedCardTemplate.querySelector("[slot='card-description']");
-  console.log(slotCardDescriptionElement);
+  // console.log(slotCardDescriptionElement);
   slotCardDescriptionElement.textContent = card.description;
   // id de la carte :
   const slotCardIdElement = clonedCardTemplate.querySelector("[slot='card-id']");

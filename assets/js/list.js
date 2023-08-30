@@ -76,7 +76,7 @@ function openAddListModal(){
 }
 
 function addListToListsContainer(list){
-  console.log(list);
+  // console.log(list);
 
   // on récupèrele template
   const listTemplate = document.querySelector('#list-template');
@@ -88,7 +88,7 @@ function addListToListsContainer(list){
   // on modifie le template avec les infos de la liste à créer
   // nom de la liste :
   const slotListNameElement = clonedListTemplate.querySelector("[slot='list-name']");
-  console.log(slotListNameElement);
+  // console.log(slotListNameElement);
   slotListNameElement.textContent = list.name;
   // id de la liste :
   const slotListIdElement = clonedListTemplate.querySelector("[slot='list-id']");
