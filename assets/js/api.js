@@ -16,6 +16,19 @@ export async function getLists(){
   return lists;
 }
 
+// ! Permet de récuperer une liste avec un Id mais je n'arrive pas a la faire fonctionner dans handleChangeListButtonClick
+export async function getOneList(listId) {
+  // on utilse fetch afin que notre code javascript emette une reqûete en GET vers l'url http://localhost:3000/lists
+  // fetch est une fonction asynchrone, on attends son résultat pour continuer
+  const listResponse = await fetch(`${apiBaseUrl}/lists/${listId}`);
+
+  // une fois la réponse obtenue, on peut parser le json contenu dans le corps de la réponse
+  // pour obtenir l'objet (ici, le tableau d'objet) représenté par kle json reçu
+  const list = await listResponse.json();
+
+  return list;
+}
+
 export async function createList(newList){
 
   // envoyer une requête en POST sur notre api :
@@ -58,3 +71,22 @@ export async function createCard(newCard){
 
   return createdCard;
 }
+
+export async function changeList(newList) {
+  const response = await fetch(`${apiBaseUrl}/lists/:id`, {
+    method: "post",
+    body: JSON.stringify(newCard),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const changeList = await response.json();
+
+  return changeList;
+}
+

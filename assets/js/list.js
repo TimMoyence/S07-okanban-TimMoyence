@@ -1,7 +1,7 @@
 // ensemble de fonction permettant la gestion des listes
 import { closeModals } from "./utils.js";
 import {listenToClickOnAddCardButton, addCardToList} from "./card.js";
-import { getLists, createList } from "./api.js";
+import { getLists, createList, getOneList } from "./api.js";
 
 // --------------------------------------
 // Event Listening (sélection d'élément et mise en écoute d'évènement)
@@ -20,6 +20,24 @@ export function listenToSubmitOnAddListForm(){
   addListFormElement.addEventListener('submit', handleAddListFormSubmit);
 }
 
+export function listenToSubmitOnChangeListForm() {
+  const changeListFormElement = document.querySelector("#change-list-modal form");
+
+  changeListFormElement.addEventListener("submit", handleChangeListFormSubmit);
+}
+
+function listenToClickOnChangeListButton(listId) {
+  // 1 - sélection de l'éléments sur lequel écouter
+    const changeListButtonElement = document.querySelector(
+    `#list-${listId} [slot='list-name']`
+  );
+
+  // console.log(changeListButtonElement);
+  // 2 - association d'un écouteur dévènement pour un type d'évènement sur l'élément
+  changeListButtonElement.addEventListener("click", handleChangeListButtonClick);
+}
+
+
 // --------------------------------------
 // Event Handler (écouteurs d'évènements)
 // --------------------------------------
@@ -27,11 +45,18 @@ function handleAddListButtonClick(){
   openAddListModal();
 }
 
-async function handleAddListFormSubmit(event){
-  event.preventDefault();
+function handleChangeListButtonClick(event) {
 
+  // ! J'arrive a récuperer la div
+  const listId = event.currentTarget
+  openChangeListModal(listId.innerHTML);
+}
+
+async function handleAddListFormSubmit(event) {
+  event.preventDefault();
+ 
   // 1 - on recueille les données de l'utilisateur
-  const addListFormElement = document.querySelector('#add-list-modal form');
+  const addListFormElement = document.querySelector("#add-list-modal form");
 
   const addListFormData = new FormData(addListFormElement);
   const listToAdd = Object.fromEntries(addListFormData);
@@ -43,7 +68,7 @@ async function handleAddListFormSubmit(event){
   // nous pourrons ainsi ajouter CETTE liste à notre interface utilisateur.
   const newList = await createList(listToAdd);
 
-  if (newList){
+  if (newList) {
     // on met à jour l'interface utilisateur avec les données retournée par l'API
     addListToListsContainer(newList);
 
@@ -51,10 +76,37 @@ async function handleAddListFormSubmit(event){
     addListFormElement.reset();
     // on ferme les modales
     closeModals();
-  }else{
-    alert ('un problème est survenu lors de la création de la liste...');
+  } else {
+    alert("un problème est survenu lors de la création de la liste...");
   }
 }
+
+async function handleChangeListFormSubmit(event) {
+  event.preventDefault();
+  
+  // 1 - on recueille les données de l'utilisateur
+  const changeListFormElement = document.querySelector("#change-list-modal form");
+
+  const changeListFormData = new FormData(changeListFormElement);
+  const listToChange = Object.fromEntries(changeListFormData);
+  console.log(listToChange.id);
+
+
+  // const newList = await changeList(listToChange);
+
+  // if (newList) {
+  //   // on met à jour l'interface utilisateur avec les données retournée par l'API
+  //   addListToListsContainer(newList);
+
+  //   // on réinitialise le formulaire
+  //   changeListFormElement.reset();
+  //   // on ferme les modales
+  //   closeModals();
+  // } else {
+  //   alert("un problème est survenu lors de la création de la liste...");
+  // }
+}
+
 
 // --------------------------------------
 // DOM Modifier (modificateurs du DOM)
@@ -73,6 +125,21 @@ function openAddListModal(){
 
   // on le modifie
   addListModalElement.classList.add('is-active');
+}
+
+function openChangeListModal(name) {
+  // on sélectionne l'élément que l'on souhaite modifie
+  const addListModalElement = document.querySelector("#change-list-modal");
+
+  // ! test ajout placehorlder
+  // const addElementInPlaceholder = document.querySelector(
+  //   "#change-list-modal .input"
+  // );
+  // addElementInPlaceholder.placeholder.add(name); 
+  // console.log(addElementInPlaceholder);
+  
+  // on le modifie
+  addListModalElement.classList.add("is-active");
 }
 
 function addListToListsContainer(list){
@@ -101,6 +168,10 @@ function addListToListsContainer(list){
 
   // on se met en écoute du click sur le bouton d'ajout de carte lors de la création de la liste
   listenToClickOnAddCardButton(list.id);
+
+
+  // en ecoute du clic du titre de la liste 
+  listenToClickOnChangeListButton(list.id);
 
   // création des cartes associées à la liste s'il y a lieu
   if (list.cards){
