@@ -57,3 +57,9 @@ async function postComment(){
 
 postComment();
 
+
+async function showLists(){
+  fetch("http://localhost:3000/lists");
+}
+
+showLists();
