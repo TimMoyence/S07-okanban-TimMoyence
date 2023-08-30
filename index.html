@@ -16,10 +16,15 @@
     <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
 
     <!-- Custom JS -->
-    <script defer src="./assets/js/config.js"></script>
+    <!-- 
+    
     <script defer src="./assets/js/api.js"></script>
+    <script defer src="./assets/js/list.js"></script>
+    <script defer src="./assets/js/card.js"></script>
+    <script defer src="./assets/js/utils.js"></script>
+    -->
     <!-- petite doc sur async et defer : https://www.alsacreations.com/astuce/lire/1562-script-attribut-async-defer.html -->
-    <script defer src="./assets/js/index.js"></script>
+    <script defer src="./assets/js/index.js" type="module"></script>
 </head>
 
 <body>
@@ -87,7 +92,7 @@
           <button class="button is-success">Ajouter</button>
           <button class="button close" type="button">Annuler</button>
         </div>
-        <input type="hidden" name="listId">
+        <input type="hidden" name="list_id">
       </form>
     </div>
   </div>
