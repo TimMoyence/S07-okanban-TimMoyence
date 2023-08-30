@@ -1,4 +1,5 @@
 // Ton code JavaScript ici !
+console.log(apiBaseUrl);
 
 // --------------------------------------
 // Event Listening (sélection d'élément et mise en écoute d'évènement)
