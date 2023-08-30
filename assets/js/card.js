@@ -46,7 +46,7 @@ async function handleAddCardFormSubmit(event){
     // on ferme les modales
     closeModals();
   }else{
-    alert ('un problème est survenu lors de la création de la liste...');
+    alert ('un problème est survenu lors de la création de la carte...');
   }
 }
 
