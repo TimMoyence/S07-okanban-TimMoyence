@@ -27,7 +27,7 @@
     <script defer src="./assets/js/index.js" type="module"></script>
 </head>
 
-<body>
+<body> 
   <header>
     <h1 class="title is-1 my-5">oKanban</h1>
   </header>
@@ -85,13 +85,14 @@
 
         <div class="modal-card-body">
           <label class="label">Nom</label>
-          <input class="input" type="text" name="name" placeholder="${name}">
+          <input class="input name-input" type="text" name="name" placeholder="${name}">
         </div>
 
         <div class="modal-card-foot">
           <button class="button is-success">Modifier</button>
           <button class="button close" type="button">Annuler</button>
         </div>
+        <input type="hidden" name="list_id">
       </form>
     </div>
   </div>
@@ -147,7 +148,7 @@
 
 <!-- Template pour une liste -->
 <template id="list-template">
-  <section class="message is-info" slot="list-id">
+  <section class="message is-info list" slot="list-id">
     <div class="message-header">
       <div class="list-name is-clickable" slot="list-name"></div>
       <span class="icon is-clickable" slot="add-card-button"><i class="fas fa-plus"></i></span>
