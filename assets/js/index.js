@@ -27,3 +27,16 @@ document.addEventListener('DOMContentLoaded', () => {
   listenToUserActions();
   initLists();
 });
+
+
+// Plan d'action
+
+// Objectif : Pouvoir supprimer UNE CARTE PARTICULIERE en cliquant sur le le bouton poubelle de CETTE CARTE PARTICULIERE
+
+// Découpons cela en étapes :
+// Il va falloir :
+// - écouter le click sur le bouton poubelle de CETTE CARTE PARTICULIERE (dans un listener),
+//        - quand ? à la création de CETTE CARTE PARTICULIERE comme ça cela marchera aussi bien pour le cartes CREES à l'initialisation de l'app que les cartes CREES durant l'utilisation de l'app.
+// - réagir au click (dans un handler) pour supprimer CETTE CARTE PARTICULIERE correspondante en :
+//        - supprimer visuellement CETTE CARTE PARTICULIERE du DOM (dom modifier) -> effet immédiat, visile lors de cette exécution de notre application front,
+//        - demander au backend de supprimer CETTE CARTE PARTICULIERE (via fetch) -> effet visible lors des prochaines utilisation de l'app,

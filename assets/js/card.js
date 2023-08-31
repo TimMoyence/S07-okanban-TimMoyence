@@ -1,6 +1,6 @@
 // ensemble de fonction permettant la gestion des cartes
 import { closeModals } from "./utils.js";
-import {createCard } from './api.js';
+import {createCard, deleteCard } from './api.js';
 
 // --------------------------------------
 // Event Listening (sélection d'élément et mise en écoute d'évènement)
@@ -34,7 +34,7 @@ async function handleAddCardFormSubmit(event){
   const cardToAdd = Object.fromEntries(addCardFormData);
 
   // en attendant... car c'est obligatoire dans notre backend
-  cardToAdd.color = "#FFFFFF";
+  cardToAdd.color = "#FF00FF";
 
   const createdCard = await createCard(cardToAdd);
 
@@ -85,17 +85,45 @@ export function addCardToList(card){
   const cardTemplateContent = cardTemplate.content;
   // on en crée une copie
   const clonedCardTemplate = cardTemplateContent.cloneNode(true);
+  console.log('template', clonedCardTemplate);
+  const clonedCardElement = clonedCardTemplate.querySelector('.card');
+
+
+
+  console.log('element du template', clonedCardElement);
 
   // on modifie le template avec les infos de la carte à créer
   // description de la carte :
-  const slotCardDescriptionElement = clonedCardTemplate.querySelector("[slot='card-description']");
+  const slotCardDescriptionElement = clonedCardElement.querySelector("[slot='card-description']");
   console.log(slotCardDescriptionElement);
   slotCardDescriptionElement.textContent = card.description;
   // id de la carte :
-  const slotCardIdElement = clonedCardTemplate.querySelector("[slot='card-id']");
-  slotCardIdElement.setAttribute("id", `card-${card.id}`);
+  clonedCardElement.setAttribute("id", `card-${card.id}`);
+
 
   // on ajoute la copie du template
-  cardsContainerElement.append(clonedCardTemplate);
+  cardsContainerElement.append(clonedCardElement);
+
+  // on récupère le bouton
+  const removeCardButtonElement = clonedCardElement.querySelector("[slot='remove-card-button']");
+  console.log(removeCardButtonElement);
+
+  // on écoute le click
+  removeCardButtonElement.addEventListener('click',
+    // on réagit dans le handler
+    async () => {
+      console.log('ça clique sur la carte ' + card.id);
+
+      // on demande à l'api la suppression de la carte
+      const deleteCardResult = await deleteCard(card.id);
+
+      if (deleteCardResult){
+        // on supprime la carte du DOM
+        clonedCardElement.remove();
+      }else{
+        alert ('suppression impossible');
+      }
+    });
+
 
 }

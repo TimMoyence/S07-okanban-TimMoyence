@@ -58,3 +58,10 @@ export async function createCard(newCard){
 
   return createdCard;
 }
+
+export async function deleteCard(cardId){
+  const response = await fetch(`${apiBaseUrl}/cards/${cardId}`, { method: 'DELETE'});
+
+  // on renvoie true si ok vaut true et false si ok vaut false
+  return response.ok;
+}
