@@ -1,6 +1,6 @@
 // ensemble de fonction permettant la gestion des cartes
 import { closeModals } from "./utils.js";
-import {createCard } from './api.js';
+import {createCard, deleteCard, updateCard } from './api.js';
 
 // --------------------------------------
 // Event Listening (sélection d'élément et mise en écoute d'évènement)
@@ -12,12 +12,25 @@ export function listenToSubmitOnAddCardForm(){
   addCardFormElement.addEventListener('submit', handleAddCardFormSubmit);
 }
 
+export function listenToSubmitOnEditCardForm(){
+  const editCardFormElement = document.querySelector('#edit-card-modal form');
+
+  console.log('j ecoute');
+  editCardFormElement.addEventListener('submit', handleEditCardFormSubmit);
+}
+
 export function listenToClickOnAddCardButton(listId){
   // je récupère le bouton + de la liste,
   const addCardButtonElement = document.querySelector(`#list-${listId} [slot='add-card-button']`);
 
   // on associe l'écouteur d'évènement au click sur ce bouton
   addCardButtonElement.addEventListener('click', handleAddCardButtonClick);
+}
+
+function listenToClickOnEditCardButton(cardId){
+  const editCardButtonElement = document.querySelector(`#card-${cardId} [slot='edit-card-button']`);
+
+  editCardButtonElement.addEventListener('click', handleEditCardButtonClick);
 }
 
 
@@ -34,7 +47,7 @@ async function handleAddCardFormSubmit(event){
   const cardToAdd = Object.fromEntries(addCardFormData);
 
   // en attendant... car c'est obligatoire dans notre backend
-  cardToAdd.color = "#FFFFFF";
+  cardToAdd.color = "#FF00FF";
 
   const createdCard = await createCard(cardToAdd);
 
@@ -46,8 +59,24 @@ async function handleAddCardFormSubmit(event){
     // on ferme les modales
     closeModals();
   }else{
-    alert ('un problème est survenu lors de la création de la liste...');
+    alert ('un problème est survenu lors de la création de la carte...');
   }
+}
+
+async function handleEditCardFormSubmit(event){
+  event.preventDefault();
+
+  const formElement = event.currentTarget;
+  const formData = new FormData(formElement);
+  const data = Object.fromEntries(formData);
+
+  const cardId = data.card_id;
+
+  const newData = await updateCard(cardId, data);
+
+  updateCardInDOM(newData.id, newData);
+
+  closeModals();
 }
 
 
@@ -61,6 +90,22 @@ function handleAddCardButtonClick(event){
   openAddCardModal(listId);
 }
 
+function handleEditCardButtonClick(event){
+  const clickedButtonElement = event.currentTarget;
+  console.log(clickedButtonElement);
+
+  const cardElement = clickedButtonElement.closest('.card');
+  console.log(cardElement);
+
+  const cardElementId = cardElement.id;
+  console.log(cardElementId);
+
+  const cardId = Number(cardElementId.substring(5));
+  console.log(cardId);
+
+  openEditCardModal(cardId);
+
+}
 
 // --------------------------------------
 // DOM Modifier (modificateurs du DOM)
@@ -75,6 +120,16 @@ function openAddCardModal(listId){
   listIdFormInputElement.value = listId;
 }
 
+function openEditCardModal(cardId){
+  // on affiche la modale
+  const editCardModalElement = document.querySelector('#edit-card-modal');
+  editCardModalElement.classList.add('is-active');
+
+  // on indique l'identifiant de la carte à modifier dans le champ caché du formulaire
+  const cardIdFormInputElement = editCardModalElement.querySelector("[name='card_id']");
+  cardIdFormInputElement.value = cardId;
+}
+
 export function addCardToList(card){
   // on récupère l'emplacement où insérer la carte
   const cardsContainerElement = document.querySelector(`#list-${card.list_id} [slot='list-content']`);
@@ -85,17 +140,55 @@ export function addCardToList(card){
   const cardTemplateContent = cardTemplate.content;
   // on en crée une copie
   const clonedCardTemplate = cardTemplateContent.cloneNode(true);
+  console.log('template', clonedCardTemplate);
+  const clonedCardElement = clonedCardTemplate.querySelector('.card');
+
+
+
+  console.log('element du template', clonedCardElement);
 
   // on modifie le template avec les infos de la carte à créer
   // description de la carte :
-  const slotCardDescriptionElement = clonedCardTemplate.querySelector("[slot='card-description']");
+  const slotCardDescriptionElement = clonedCardElement.querySelector("[slot='card-description']");
   console.log(slotCardDescriptionElement);
   slotCardDescriptionElement.textContent = card.description;
   // id de la carte :
-  const slotCardIdElement = clonedCardTemplate.querySelector("[slot='card-id']");
-  slotCardIdElement.setAttribute("id", `card-${card.id}`);
+  clonedCardElement.setAttribute("id", `card-${card.id}`);
+
 
   // on ajoute la copie du template
-  cardsContainerElement.append(clonedCardTemplate);
+  cardsContainerElement.append(clonedCardElement);
 
+  // on récupère le bouton
+  const removeCardButtonElement = clonedCardElement.querySelector("[slot='remove-card-button']");
+  console.log(removeCardButtonElement);
+
+  // on écoute le click pour la suppression
+  removeCardButtonElement.addEventListener('click',
+    // on réagit dans le handler
+    async () => {
+      console.log('ça clique sur la carte ' + card.id);
+
+      // on demande à l'api la suppression de la carte
+      const deleteCardResult = await deleteCard(card.id);
+
+      if (deleteCardResult){
+        // on supprime la carte du DOM
+        clonedCardElement.remove();
+      }else{
+        alert ('suppression impossible');
+      }
+    });
+
+  // on écoute le click pour l'édition
+  listenToClickOnEditCardButton(card.id);
+
+
+}
+
+function updateCardInDOM(cardId, data){
+  if (data.description){
+    const cardSlotDescription = document.querySelector(`#card-${cardId} [slot="card-description"]`);
+    cardSlotDescription.textContent = data.description;
+  }
 }

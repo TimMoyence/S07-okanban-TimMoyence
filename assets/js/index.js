@@ -5,7 +5,7 @@
 import { apiBaseUrl } from "./config.js";
 import { initLists, listenToClickOnAddListButton, listenToSubmitOnAddListForm } from "./list.js";
 import { listenToClickOnModalClosingElements } from "./utils.js";
-import { listenToSubmitOnAddCardForm } from "./card.js";
+import { listenToSubmitOnAddCardForm, listenToSubmitOnEditCardForm } from "./card.js";
 
 // Ton code JavaScript ici !
 console.log(apiBaseUrl);
@@ -18,6 +18,7 @@ function listenToUserActions(){
   listenToClickOnModalClosingElements();
   listenToSubmitOnAddListForm();
   listenToSubmitOnAddCardForm();
+  listenToSubmitOnEditCardForm();
 }
 
 // --------------------------------------
@@ -27,3 +28,40 @@ document.addEventListener('DOMContentLoaded', () => {
   listenToUserActions();
   initLists();
 });
+
+
+// Plan d'action (suppression de la carte)
+
+// Objectif : Pouvoir supprimer UNE CARTE PARTICULIERE en cliquant sur le le bouton poubelle de CETTE CARTE PARTICULIERE
+
+// Découpons cela en étapes :
+// Il va falloir :
+// - écouter le click sur le bouton poubelle de CETTE CARTE PARTICULIERE (dans un listener),
+//        - quand ? à la création de CETTE CARTE PARTICULIERE comme ça cela marchera aussi bien pour le cartes CREES à l'initialisation de l'app que les cartes CREES durant l'utilisation de l'app.
+// - réagir au click (dans un handler) pour supprimer CETTE CARTE PARTICULIERE correspondante en :
+//        - supprimer visuellement CETTE CARTE PARTICULIERE du DOM (dom modifier) -> effet immédiat, visile lors de cette exécution de notre application front,
+//        - demander au backend de supprimer CETTE CARTE PARTICULIERE (via fetch) -> effet visible lors des prochaines utilisation de l'app,
+
+
+// Plan d'action (édition de la carte)
+
+// Objectif : Pouvoir modifier UNE CARTE PARTICULIERE en cliquant sur le le bouton crayon de CETTE CARTE PARTICULIERE
+
+// Découpons cela en étapes :
+
+// Il va falloir :
+
+// - écouter le click sur le bouton crayon de CETTE CARTE PARTICULIERE (dans un listener),
+//        - quand ? à la création de CETTE CARTE PARTICULIERE comme ça cela marchera aussi bien pour le cartes CREES à l'initialisation de l'app que les cartes CREES durant l'utilisation de l'app.
+// - réagir au click (dans un handler) pour ouvrir une modale permettant de saisir les nouvelles informations de CETTE CARTE PARTICULIERE
+
+// -> transmettre l'id (pour le stocker dans la modale mais aussi venir préremplir le formulaire à partir des informations de la carte présente dans el DOM)
+
+// - écouter la soumission de LA modale d'édition
+//        - quand ? au démarrage de l'application (c'est la même modale qui va être utilisée pour éditer toutes les cartes)
+
+// -> transmettre l'id (ça se fait tout seul, il est dans le formulaire)
+
+// - réagir à cette soumission en :
+//        - demander au backend de modifier CETTE CARTE PARTICULIERE avec les informations saisies (via fetch) -> effet visible lors des prochaines utilisation de l'app,
+//        - modifier visuellement CETTE CARTE PARTICULIERE dans DOM avec le nouveau libellé (dom modifier) -> effet immédiat, visile lors de cette exécution de notre application front,
