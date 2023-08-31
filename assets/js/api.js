@@ -73,6 +73,41 @@ export async function createCard(newCard){
   return createdCard;
 }
 
+export async function changeCard(changeCardId, changeCardObject) {
+  const response = await fetch(`${apiBaseUrl}/cards/${changeCardId}`, {
+    method: "PATCH",
+    body: JSON.stringify(changeCardObject),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const changingCard = await response.json();
+
+  return changingCard;
+}
+
+export async function deleteCard(cardId) {
+  const response = await fetch(`${apiBaseUrl}/cards/${cardId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const deletingCard = await response.json();
+
+  return deletingCard;
+}
+
 export async function changeList(newList, listToChange) {
   const response = await fetch(`${apiBaseUrl}/lists/${newList}`, {
     method: "PATCH",
@@ -90,4 +125,6 @@ export async function changeList(newList, listToChange) {
 
   return changeList;
 }
+
+
 

@@ -180,7 +180,6 @@ function addListToListsContainer(list){
   // on se met en écoute du click sur le bouton d'ajout de carte lors de la création de la liste
   listenToClickOnAddCardButton(list.id);
 
-
   // en ecoute du clic du titre de la liste 
   listenToClickOnChangeListButton(list);
 

@@ -10,7 +10,10 @@ import {
   listenToSubmitOnChangeListForm,
 } from "./list.js";
 import { listenToClickOnModalClosingElements } from "./utils.js";
-import { listenToSubmitOnAddCardForm } from "./card.js";
+import {
+  listenToSubmitOnAddCardForm,
+  listenToSubmitOnChangeCardForm,
+} from "./card.js";
 
 // Ton code JavaScript ici !
 // console.log(apiBaseUrl);
@@ -24,6 +27,7 @@ function listenToUserActions(){
   listenToSubmitOnAddListForm();
   listenToSubmitOnAddCardForm();
   listenToSubmitOnChangeListForm();
+  listenToSubmitOnChangeCardForm();
 }
 
 // --------------------------------------
