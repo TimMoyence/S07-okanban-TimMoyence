@@ -65,3 +65,21 @@ export async function deleteCard(cardId){
   // on renvoie true si ok vaut true et false si ok vaut false
   return response.ok;
 }
+
+export async function updateCard(cardId, newCardData){
+  const response = await fetch(`${apiBaseUrl}/cards/${cardId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(newCardData),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  });
+
+  if (!response.ok){
+    return null;
+  }
+
+  const updatedCard = await response.json();
+
+  return updatedCard;
+}

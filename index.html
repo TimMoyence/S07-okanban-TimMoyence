@@ -96,6 +96,30 @@
       </form>
     </div>
   </div>
+
+  <!-- Edit a card modal -->
+  <div class="modal" id="edit-card-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <form>
+        <div class="modal-card-head">
+          <p class="modal-card-title">Modifier une carte</p>
+          <button class="delete close" type="button" aria-label="close"></button>
+        </div>
+
+        <div class="modal-card-body">
+          <label class="label">Description</label>
+          <textarea name="description" placeholder="Description de la carte"></textarea>
+        </div>
+
+        <div class="modal-card-foot">
+          <button class="button is-success">Modifier</button>
+          <button class="button close" type="button">Annuler</button>
+        </div>
+        <input type="hidden" name="card_id">
+      </form>
+    </div>
+  </div>
 </body>
 
 <!-- Template pour une liste -->

@@ -1,6 +1,6 @@
 // ensemble de fonction permettant la gestion des cartes
 import { closeModals } from "./utils.js";
-import {createCard, deleteCard } from './api.js';
+import {createCard, deleteCard, updateCard } from './api.js';
 
 // --------------------------------------
 // Event Listening (sélection d'élément et mise en écoute d'évènement)
@@ -12,12 +12,25 @@ export function listenToSubmitOnAddCardForm(){
   addCardFormElement.addEventListener('submit', handleAddCardFormSubmit);
 }
 
+export function listenToSubmitOnEditCardForm(){
+  const editCardFormElement = document.querySelector('#edit-card-modal form');
+
+  console.log('j ecoute');
+  editCardFormElement.addEventListener('submit', handleEditCardFormSubmit);
+}
+
 export function listenToClickOnAddCardButton(listId){
   // je récupère le bouton + de la liste,
   const addCardButtonElement = document.querySelector(`#list-${listId} [slot='add-card-button']`);
 
   // on associe l'écouteur d'évènement au click sur ce bouton
   addCardButtonElement.addEventListener('click', handleAddCardButtonClick);
+}
+
+function listenToClickOnEditCardButton(cardId){
+  const editCardButtonElement = document.querySelector(`#card-${cardId} [slot='edit-card-button']`);
+
+  editCardButtonElement.addEventListener('click', handleEditCardButtonClick);
 }
 
 
@@ -50,6 +63,22 @@ async function handleAddCardFormSubmit(event){
   }
 }
 
+async function handleEditCardFormSubmit(event){
+  event.preventDefault();
+
+  const formElement = event.currentTarget;
+  const formData = new FormData(formElement);
+  const data = Object.fromEntries(formData);
+
+  const cardId = data.card_id;
+
+  const newData = await updateCard(cardId, data);
+
+  updateCardInDOM(newData.id, newData);
+
+  closeModals();
+}
+
 
 function handleAddCardButtonClick(event){
   // on récupère l'id de la liste pour laquelle on veut créer une carte
@@ -61,6 +90,22 @@ function handleAddCardButtonClick(event){
   openAddCardModal(listId);
 }
 
+function handleEditCardButtonClick(event){
+  const clickedButtonElement = event.currentTarget;
+  console.log(clickedButtonElement);
+
+  const cardElement = clickedButtonElement.closest('.card');
+  console.log(cardElement);
+
+  const cardElementId = cardElement.id;
+  console.log(cardElementId);
+
+  const cardId = Number(cardElementId.substring(5));
+  console.log(cardId);
+
+  openEditCardModal(cardId);
+
+}
 
 // --------------------------------------
 // DOM Modifier (modificateurs du DOM)
@@ -73,6 +118,16 @@ function openAddCardModal(listId){
   // on indique l'identifiant de la liste dans le champ caché du formulaire
   const listIdFormInputElement = addListModalElement.querySelector("[name='list_id']");
   listIdFormInputElement.value = listId;
+}
+
+function openEditCardModal(cardId){
+  // on affiche la modale
+  const editCardModalElement = document.querySelector('#edit-card-modal');
+  editCardModalElement.classList.add('is-active');
+
+  // on indique l'identifiant de la carte à modifier dans le champ caché du formulaire
+  const cardIdFormInputElement = editCardModalElement.querySelector("[name='card_id']");
+  cardIdFormInputElement.value = cardId;
 }
 
 export function addCardToList(card){
@@ -108,7 +163,7 @@ export function addCardToList(card){
   const removeCardButtonElement = clonedCardElement.querySelector("[slot='remove-card-button']");
   console.log(removeCardButtonElement);
 
-  // on écoute le click
+  // on écoute le click pour la suppression
   removeCardButtonElement.addEventListener('click',
     // on réagit dans le handler
     async () => {
@@ -125,5 +180,15 @@ export function addCardToList(card){
       }
     });
 
+  // on écoute le click pour l'édition
+  listenToClickOnEditCardButton(card.id);
 
+
+}
+
+function updateCardInDOM(cardId, data){
+  if (data.description){
+    const cardSlotDescription = document.querySelector(`#card-${cardId} [slot="card-description"]`);
+    cardSlotDescription.textContent = data.description;
+  }
 }
