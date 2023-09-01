@@ -8,6 +8,7 @@ import {
   listenToClickOnAddListButton,
   listenToSubmitOnAddListForm,
   listenToSubmitOnChangeListForm,
+  listenToDragOnList,
 } from "./list.js";
 import { listenToClickOnModalClosingElements } from "./utils.js";
 import {
@@ -28,6 +29,7 @@ function listenToUserActions(){
   listenToSubmitOnAddCardForm();
   listenToSubmitOnChangeListForm();
   listenToSubmitOnChangeCardForm();
+  listenToDragOnList();
 }
 
 // --------------------------------------

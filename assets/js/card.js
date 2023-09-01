@@ -68,7 +68,7 @@ async function handleAddCardFormSubmit(event){
 
   const createdCard = await createCard(cardToAdd);
 
-  addCardToList(cardToAdd);
+  addCardToList(createdCard);
 
   if (createdCard){
     // on réinitialise le formulaire

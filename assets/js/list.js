@@ -2,7 +2,7 @@
 import { closeModals } from "./utils.js";
 import {listenToClickOnAddCardButton, addCardToList} from "./card.js";
 import { getLists, createList, changeList } from "./api.js";
-
+import Sortable from "sortablejs";
 // --------------------------------------
 // Event Listening (sélection d'élément et mise en écoute d'évènement)
 // --------------------------------------
@@ -35,7 +35,13 @@ function listenToClickOnChangeListButton(list) {
   changeListButtonElement.addEventListener("click", handleChangeListButtonClick);
 }
 
-
+export function listenToDragOnList(){
+    const listsContainerElement = document.querySelector("#lists-container");
+    Sortable.create(listsContainerElement, {
+      animation: 250,
+      onEnd: handleListDargEnd,
+    });
+}
 // --------------------------------------
 // Event Handler (écouteurs d'évènements)
 // --------------------------------------
@@ -120,7 +126,23 @@ async function handleChangeListFormSubmit(event) {
     alert("un problème est survenu lors de la création de la liste...");
   }
 }
-
+  
+  
+async function handleListDargEnd (evt){
+  const listElementList = document.querySelectorAll('.list');
+  
+  let position = 0
+  for (const listElement of listElementList) {
+    console.log(listElement);
+    console.log(position);
+    
+    const idListElement = listElement.id;
+    const listId = idListElement.substring(5);
+    console.log(listId);
+    const newList = await changeList(listId, { position: position });
+    position++;
+  }
+}
 
 // --------------------------------------
 // DOM Modifier (modificateurs du DOM)

@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "sortablejs": "^1.15.0"
+  },
+  "name": "s07-okanban-client-red-timmoyence",
+  "description": "## Préparation : intégration",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "devDependencies": {
+    "vite": "^4.4.9"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": []
+}
