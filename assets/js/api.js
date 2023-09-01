@@ -126,5 +126,20 @@ export async function changeList(newList, listToChange) {
   return changeList;
 }
 
+export async function deleteList(listId) {
+  const response = await fetch(`${apiBaseUrl}/lists/${listId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
 
+  if (!response.ok) {
+    return null;
+  }
+
+  const deletingCard = await response.json();
+
+  return deletingCard;
+}
 

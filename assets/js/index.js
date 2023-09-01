@@ -15,6 +15,10 @@ import {
   listenToSubmitOnAddCardForm,
   listenToSubmitOnChangeCardForm,
 } from "./card.js";
+import {
+  listenToClickOnTitle,
+  listenToSubmintOnChangeTitleForm,
+} from "./okanTitle.js";
 
 // Ton code JavaScript ici !
 // console.log(apiBaseUrl);
@@ -30,6 +34,8 @@ function listenToUserActions(){
   listenToSubmitOnChangeListForm();
   listenToSubmitOnChangeCardForm();
   listenToDragOnList();
+  listenToClickOnTitle();
+  listenToSubmintOnChangeTitleForm();
 }
 
 // --------------------------------------

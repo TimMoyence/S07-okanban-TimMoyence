@@ -1,87 +1,88 @@
-// ensemble de fonction permettant la gestion des cartes
+// Ensemble de fonctions permettant la gestion des cartes
+
+// Import des modules nécessaires
 import { closeModals } from "./utils.js";
 import { createCard, changeCard, deleteCard } from "./api.js";
+import { orderCards } from "./list.js";
 
 // --------------------------------------
-// Event Listening (sélection d'élément et mise en écoute d'évènement)
+// Event Listening (Écoute des événements)
 // --------------------------------------
 
-export function listenToSubmitOnAddCardForm(){
-  const addCardFormElement = document.querySelector('#add-card-modal form');
-
-  addCardFormElement.addEventListener('submit', handleAddCardFormSubmit);
+// Écouteur de soumission du formulaire d'ajout de carte
+export function listenToSubmitOnAddCardForm() {
+  const addCardFormElement = document.querySelector("#add-card-modal form");
+  addCardFormElement.addEventListener("submit", handleAddCardFormSubmit);
 }
 
+// Écouteur de soumission du formulaire de modification de carte
 export function listenToSubmitOnChangeCardForm() {
-  const changeCardFormElement = document.querySelector("#change-card-modal form");
-
+  const changeCardFormElement = document.querySelector(
+    "#change-card-modal form"
+  );
   changeCardFormElement.addEventListener("submit", handleChangeCardFormSubmit);
 }
 
-export function listenToClickOnAddCardButton(listId){
-  // je récupère le bouton + de la liste,
-  const addCardButtonElement = document.querySelector(`#list-${listId} [slot='add-card-button']`);
-
-  // on associe l'écouteur d'évènement au click sur ce bouton
-  addCardButtonElement.addEventListener('click', handleAddCardButtonClick);
+// Écouteur de clic sur le bouton d'ajout de carte pour une liste spécifique
+export function listenToClickOnAddCardButton(listId) {
+  const addCardButtonElement = document.querySelector(
+    `#list-${listId} [slot='add-card-button']`
+  );
+  addCardButtonElement.addEventListener("click", handleAddCardButtonClick);
 }
 
-// ! Question : 
-// ? Peut tu réexpliquer pourquoi on a modifier la fonction parente de listenToClickOnChangeCardButton, je ne comprend pas pourquoi moi elle ne marchait pas sans les modification que tu avait faite la veille 
-
+// Écouteur de clic sur le bouton de modification de carte
 function listenToClickOnChangeCardButton(cardId) {
-  // je récupère le bouton modification de la carte,
   const changeCardButtonElement = document.querySelector(
     `#card-${cardId} [slot='edit-card-button']`
   );
-
-  // on associe l'écouteur d'évènement au click sur ce bouton
-  changeCardButtonElement.addEventListener("click", handleChangeCardButtonClick);
+  changeCardButtonElement.addEventListener(
+    "click",
+    handleChangeCardButtonClick
+  );
 }
 
-function listenToClickOnDeleteCardButton(cardId){
-    // je récupère le bouton modification de la carte,
+// Écouteur de clic sur le bouton de suppression de carte
+function listenToClickOnDeleteCardButton(cardId) {
   const deleteCardButtonElement = document.querySelector(
     `#card-${cardId} [slot='remove-card-button']`
   );
-
-  // on associe l'écouteur d'évènement au click sur ce bouton
-  deleteCardButtonElement.addEventListener("click", handleDeleteCardButtonClick);
+  deleteCardButtonElement.addEventListener(
+    "click",
+    handleDeleteCardButtonClick
+  );
 }
 
-
-
 // --------------------------------------
-// Event Handler (écouteurs d'évènements)
+// Event Handlers (Gestionnaires d'événements)
 // --------------------------------------
 
-async function handleAddCardFormSubmit(event){
+// Gestionnaire de soumission du formulaire d'ajout de carte
+async function handleAddCardFormSubmit(event) {
   event.preventDefault();
 
-  const addCardFormElement = document.querySelector('#add-card-modal form');
-
+  const addCardFormElement = document.querySelector("#add-card-modal form");
   const addCardFormData = new FormData(addCardFormElement);
   const cardToAdd = Object.fromEntries(addCardFormData);
 
-  // en attendant... car c'est obligatoire dans notre backend
+  // En attendant... car c'est obligatoire dans notre backend
   cardToAdd.color = "#FFFFFF";
 
   const createdCard = await createCard(cardToAdd);
 
   addCardToList(createdCard);
 
-  if (createdCard){
-    // on réinitialise le formulaire
+  if (createdCard) {
+    // Réinitialisation du formulaire et fermeture des modales
     addCardFormElement.reset();
-    // on ferme les modales
     closeModals();
-  }else{
-    alert ('un problème est survenu lors de la création de la liste...');
+  } else {
+    alert("Un problème est survenu lors de la création de la carte...");
   }
 }
 
-async function handleDeleteCardButtonClick(event){
-  // on récupère l'id de la liste pour laquelle on veut supprimer une carte
+// Gestionnaire de clic sur le bouton de suppression de carte
+async function handleDeleteCardButtonClick(event) {
   const clickedButtonElement = event.currentTarget;
   const cardDeleteElement = clickedButtonElement.closest("[slot=card-id]");
   const idValue = cardDeleteElement.id;
@@ -89,122 +90,127 @@ async function handleDeleteCardButtonClick(event){
 
   const deletedCard = await deleteCard(cardId);
   if (deletedCard) {
-    // on met à jour l'interface utilisateur avec les données retournée par l'API
+    // Mise à jour de l'interface utilisateur avec les données de la carte supprimée
     cardDeleteElement.remove();
   } else {
-    alert("un problème est survenu lors de la création de la liste...");
+    alert("Un problème est survenu lors de la suppression de la carte...");
   }
 }
 
-async function handleChangeCardFormSubmit(event){
+// Gestionnaire de soumission du formulaire de modification de carte
+async function handleChangeCardFormSubmit(event) {
   event.preventDefault();
-  const changeCardFormElement = document.querySelector("#change-card-modal form");
+  const changeCardFormElement = document.querySelector(
+    "#change-card-modal form"
+  );
   const changeCardFormData = new FormData(changeCardFormElement);
   const changeCardObject = Object.fromEntries(changeCardFormData);
   const changeCardId = changeCardObject.card_id;
 
   const changeThisCard = await changeCard(changeCardId, changeCardObject);
- 
+
   if (changeThisCard) {
-    // on met à jour l'interface utilisateur avec les données retournée par l'API
+    // Mise à jour de l'interface utilisateur avec les données de la carte modifiée
     updateCardDom(changeCardId, changeCardObject);
 
-    // on réinitialise le formulaire
+    // Réinitialisation du formulaire et fermeture des modales
     changeCardFormElement.reset();
-    // on ferme les modales
     closeModals();
   } else {
-    alert("un problème est survenu lors de la création de la liste...");
+    alert("Un problème est survenu lors de la modification de la carte...");
   }
 }
 
-function handleAddCardButtonClick(event){
-  // on récupère l'id de la liste pour laquelle on veut créer une carte
+// Gestionnaire de clic sur le bouton d'ajout de carte
+function handleAddCardButtonClick(event) {
   const clickedButtonElement = event.currentTarget;
-  const listIdElement = clickedButtonElement.closest('[slot=list-id]');
+  const listIdElement = clickedButtonElement.closest("[slot=list-id]");
   const idValue = listIdElement.id;
   const listId = Number(idValue.substring(5));
-  // on demande l'affichage de la modal en précisant à quelle liste elle permet d'ajouter une carte
+
+  // Demande d'affichage de la modal en précisant à quelle liste elle permet d'ajouter une carte
   openAddCardModal(listId);
 }
 
-function handleChangeCardButtonClick(event){
-  // on récupère l'id de la carte pour laquelle on veut créer une carte
+// Gestionnaire de clic sur le bouton de modification de carte
+function handleChangeCardButtonClick(event) {
   const clickedButtonElement = event.currentTarget;
   const cardIdElement = clickedButtonElement.closest("[slot=card-id]");
   const idValue = cardIdElement.id;
   const cardId = Number(idValue.substring(5));
 
-  // on demande l'affichage de la modal en précisant à quelle carte elle permet d'ajouter une carte
+  // Demande d'affichage de la modal en précisant à quelle carte elle permet d'ajouter une carte
   openChangeCardModal(cardId);
 }
 
-
 // --------------------------------------
-// DOM Modifier (modificateurs du DOM)
+// DOM Modification (Modification du DOM)
 // --------------------------------------
-function openAddCardModal(listId){
-  // on affiche la modale
-  const addListModalElement = document.querySelector('#add-card-modal');
-  addListModalElement.classList.add('is-active');
 
-  // on indique l'identifiant de la liste dans le champ caché du formulaire
-  const listIdFormInputElement = addListModalElement.querySelector("[name='list_id']");
+// Ouverture de la modale d'ajout de carte pour une liste spécifique
+function openAddCardModal(listId) {
+  const addListModalElement = document.querySelector("#add-card-modal");
+  addListModalElement.classList.add("is-active");
+
+  // Indication de l'identifiant de la liste dans le champ caché du formulaire
+  const listIdFormInputElement =
+    addListModalElement.querySelector("[name='list_id']");
   listIdFormInputElement.value = listId;
 }
 
-function openChangeCardModal(cardId){
-  // on affiche la modale
+// Ouverture de la modale de modification de carte
+function openChangeCardModal(cardId) {
   const addcardModalElement = document.querySelector("#change-card-modal");
   addcardModalElement.classList.add("is-active");
 
-  // on indique l'identifiant de la carte dans le champ caché du formulaire
+  // Indication de l'identifiant de la carte dans le champ caché du formulaire
   const cardIdFormInputElement =
     addcardModalElement.querySelector("[name='card_id']");
   cardIdFormInputElement.value = cardId;
 }
 
+// Ajout d'une carte à une liste
 export function addCardToList(card) {
-  // on récupère l'emplacement où insérer la carte
+  // Récupération de l'emplacement où insérer la carte
   const cardsContainerElement = document.querySelector(
     `#list-${card.list_id} [slot='list-content']`
   );
 
-  // on récupèrele template
+  // Récupération du modèle de carte
   const cardTemplate = document.querySelector("#card-template");
-  // on accède à son contenu
   const cardTemplateContent = cardTemplate.content;
-  // on en crée une copie
   const clonedCardTemplate = cardTemplateContent.cloneNode(true);
   const clonedCardElement = clonedCardTemplate.querySelector(".card");
 
-
-  // on modifie le template avec les infos de la carte à créer
-  // description de la carte :
+  // Modification du modèle avec les informations de la carte à créer
+  // Description de la carte :
   const slotCardDescriptionElement = clonedCardElement.querySelector(
     "[slot='card-description']"
   );
   slotCardDescriptionElement.textContent = card.description;
-  // id de la carte :
+
+  // ID de la carte :
   clonedCardElement.setAttribute("id", `card-${card.id}`);
 
-  // on ajoute la copie du template
+  // Ajout de la copie du modèle
   cardsContainerElement.append(clonedCardElement);
 
-  // Delete :
+  // Écoute du clic pour la suppression de carte
   listenToClickOnDeleteCardButton(card.id);
 
-  // on écoute le click pour l'édition
+  // Écoute du clic pour la modification de carte
   listenToClickOnChangeCardButton(card.id);
+
+  // Réordonnement des cartes
+  orderCards(cardsContainerElement);
 }
 
-
+// Mise à jour du DOM de la carte
 function updateCardDom(changeCardId, changeCardObject) {
   if (changeCardObject.description) {
     const updatedCard = document.querySelector(
       `#card-${changeCardId}  [slot="card-description"]`
     );
-
     updatedCard.innerHTML = changeCardObject.description;
   }
 }
