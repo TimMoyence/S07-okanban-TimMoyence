@@ -34,6 +34,8 @@ function handleChangeTitleFormSubmint(event){
 
   const changeTitleFormData = new FormData(changeTitleFormElement);
   const changeTitleObject = Object.fromEntries(changeTitleFormData);
+  
+  //! Faire l'envoie a la BDD pour le nouveau titre 
 
   updateTitleDom(changeTitleObject);
 
@@ -58,4 +60,9 @@ function updateTitleDom(newTitle){
     titleElement.textContent = newTitle.description;
 
 }
+
+
+
+// ! 1- faire un fonction de création de la table pour récuperer le titre et le créer, penser a rajouter le user_id dans la value du titre => il faut créer de quoi ce connecter avant ça 
+// ? export async function addTableToContainer() {}
 

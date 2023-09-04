@@ -8,7 +8,14 @@ class List extends Model {};
 List.init({
 
     name: DataTypes.TEXT,
-    position: DataTypes.SMALLINT
+    position: DataTypes.SMALLINT,
+    tableId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: 'table',
+          key: 'id'
+        }
+      },
 }, {
     sequelize: client,
     tableName: 'list'

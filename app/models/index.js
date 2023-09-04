@@ -2,9 +2,29 @@
 const Card = require('./card');
 const Label = require('./label');
 const List = require('./list');
+const User = require('./user');
+const Table = require('./table');
 
 
 // on spécifie les associations
+
+// une table detient un user
+Table.hasOne(User, {
+  as: 'userName',
+  foreignKey: 'user_id',
+});
+// un user detient une table 
+User.belongsTo(Table)
+
+// Une table contient plusieurs liste
+Table.hasMany(List,{
+    as: 'listName',
+})
+// Une liste contient une seul table
+List.belongsTo(Table, {
+  as: "table",
+  foreignKey: "table_id",
+});
 
 // Une liste a plusieurs cartes
 List.hasMany(Card, {
@@ -34,5 +54,8 @@ Card.belongsToMany(Label, {
     timestamps: false
 })
 
+
+
+
 // on exporte les modèles modifiés
-module.exports = { Card, List, Label }
+module.exports = { Card, List, Label, Table, User }

@@ -18,7 +18,7 @@ import {
 import {
   listenToClickOnTitle,
   listenToSubmintOnChangeTitleForm,
-} from "./okanTitle.js";
+} from "./table.js";
 
 // Ton code JavaScript ici !
 // console.log(apiBaseUrl);

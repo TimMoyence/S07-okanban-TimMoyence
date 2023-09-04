@@ -16,19 +16,6 @@ export async function getLists(){
   return lists;
 }
 
-// ! Permet de récuperer une liste avec un Id mais je n'arrive pas a la faire fonctionner dans handleChangeListButtonClick
-// ? Ne sert a rien 
-export async function getOneList(listId) {
-  // on utilse fetch afin que notre code javascript emette une reqûete en GET vers l'url http://localhost:3000/lists
-  // fetch est une fonction asynchrone, on attends son résultat pour continuer
-  const listResponse = await fetch(`${apiBaseUrl}/lists/${listId}`);
-
-  // une fois la réponse obtenue, on peut parser le json contenu dans le corps de la réponse
-  // pour obtenir l'objet (ici, le tableau d'objet) représenté par kle json reçu
-  const list = await listResponse.json();
-
-  return list;
-}
 
 export async function createList(newList){
 
@@ -143,3 +130,13 @@ export async function deleteList(listId) {
   return deletingCard;
 }
 
+
+// fonction pour récupération du titre 
+export async function getTable(id){
+  const tableResponse = await fetch(`${apiBaseUrl}/table/${id}`);
+  const table = await tableResponse.json();
+
+  return table;
+}
+
+// ! Création d'un fonction pour mettre a jour le titre (pas de delete possible, ni de creation il a deja une valeur de okanban)

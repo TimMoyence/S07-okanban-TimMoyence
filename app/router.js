@@ -5,6 +5,8 @@ const router = express.Router();
 
 const listController = require('./controllers/listController')
 const labelController = require('./controllers/labelController')
+const tableController = require("./controllers/tableController");
+
 // list
 router.get('/lists', listController.getLists)
 router.get('/lists/:id', listController.getOneList)
@@ -23,6 +25,9 @@ router.delete('/cards/:id', cardController.deleteCard);
 // label
 router.post('/cards/:id/tags', labelController.associateLabelToCard);
 router.delete('/cards/:cardId/label/:labelId', labelController.removeLabelFromCard)
+
+// table
+router.get('/table/:id', tableController.getTableOfUser)
 
 
 // 404 
