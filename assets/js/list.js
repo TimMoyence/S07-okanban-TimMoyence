@@ -1,65 +1,183 @@
-// ensemble de fonction permettant la gestion des listes
+// Ensemble de fonctions permettant la gestion des listes et des cartes
+
+// Import des modules nécessaires
 import { closeModals } from "./utils.js";
-import {listenToClickOnAddCardButton, addCardToList} from "./card.js";
-import { getLists, createList } from "./api.js";
+import { listenToClickOnAddCardButton, addCardToList } from "./card.js";
+import {
+  getLists,
+  createList,
+  changeList,
+  changeCard,
+  deleteList,
+} from "./api.js";
+import Sortable from "sortablejs";
 
 // --------------------------------------
-// Event Listening (sélection d'élément et mise en écoute d'évènement)
+// Event Listening (Écoute des événements)
 // --------------------------------------
-export function listenToClickOnAddListButton(){
-  // 1 - sélection de l'éléments sur lequel écouter
-  const addListButtonElement = document.querySelector('#addlist-button');
 
-  // 2 - association d'un écouteur dévènement pour un type d'évènement sur l'élément
+// Écouteur de clic sur le bouton d'ajout de liste
+export function listenToClickOnAddListButton() {
+  const addListButtonElement = document.querySelector("#addlist-button");
   addListButtonElement.addEventListener("click", handleAddListButtonClick);
 }
 
-export function listenToSubmitOnAddListForm(){
-  const addListFormElement = document.querySelector('#add-list-modal form');
+// Écouteur de soumission du formulaire d'ajout de liste
+export function listenToSubmitOnAddListForm() {
+  const addListFormElement = document.querySelector("#add-list-modal form");
+  addListFormElement.addEventListener("submit", handleAddListFormSubmit);
+}
 
-  addListFormElement.addEventListener('submit', handleAddListFormSubmit);
+// Écouteur de soumission du formulaire de modification de liste
+export function listenToSubmitOnChangeListForm() {
+  const changeListFormElement = document.querySelector(
+    "#change-list-modal form"
+  );
+  changeListFormElement.addEventListener("submit", handleChangeListFormSubmit);
+}
+
+// Écouteur de clic sur le nom de la liste pour la modifier
+function listenToClickOnChangeListButton(list) {
+  const changeListButtonElement = document.querySelector(
+    `#list-${list.id} [slot='list-name']`
+  );
+  changeListButtonElement.addEventListener(
+    "click",
+    handleChangeListButtonClick
+  );
+}
+
+// Écouteur de clic sur le bouton de suppression de liste
+function listenToClickOnDeleteListButton(list) {
+  const deleteListButtonElement = document.querySelector(
+    `#list-${list} [slot='remove-list-button']`
+  );
+  deleteListButtonElement.addEventListener(
+    "click",
+    handleDeleteListButtonClick
+  );
+}
+
+// Écouteur de glisser-déposer pour les listes
+export function listenToDragOnList() {
+  const listsContainerElement = document.querySelector("#lists-container");
+  Sortable.create(listsContainerElement, {
+    animation: 250,
+    onEnd: handleListDragEnd,
+  });
 }
 
 // --------------------------------------
-// Event Handler (écouteurs d'évènements)
+// Event Handlers (Gestionnaires d'événements)
 // --------------------------------------
-function handleAddListButtonClick(){
+
+// Gestionnaire de clic sur le bouton d'ajout de liste
+function handleAddListButtonClick() {
   openAddListModal();
 }
 
-async function handleAddListFormSubmit(event){
+// Gestionnaire de clic sur le nom de la liste pour la modifier
+function handleChangeListButtonClick(event) {
+  // Récupération du nom de la liste à partir de l'événement
+  const listName = event.currentTarget;
+
+  // Mise à jour du champ de formulaire pour le changement de nom
+  const changeListFormElement = document.querySelector(
+    "#change-list-modal form .name-input"
+  );
+  changeListFormElement.placeholder = listName.innerHTML;
+
+  // Récupération de l'ID de la liste
+  const listIdElement = listName.closest(".list");
+  const listId = Number(listIdElement.id.substring(5));
+
+  openChangeListModal(listId);
+}
+
+// Gestionnaire de soumission du formulaire d'ajout de liste
+async function handleAddListFormSubmit(event) {
   event.preventDefault();
 
-  // 1 - on recueille les données de l'utilisateur
-  const addListFormElement = document.querySelector('#add-list-modal form');
-
+  // Récupération des données du formulaire
+  const addListFormElement = document.querySelector("#add-list-modal form");
   const addListFormData = new FormData(addListFormElement);
   const listToAdd = Object.fromEntries(addListFormData);
 
-  // 2 - on transmets les données saisies à l'API en lui inquant que faire de ces données (ici, d'ajouter une liste)
-  // 3 - on récupère les données retournées par l'API (on connait maintenant l'id de la liste créée)
-  // une fois que l'on a recueilli les données de la liste à créer, on peut demander la création de cette liste au backend.
-  // ce dernier nous renverra les informations de la liste créées (avec notamment son id)
-  // nous pourrons ainsi ajouter CETTE liste à notre interface utilisateur.
   const newList = await createList(listToAdd);
 
-  if (newList){
-    // on met à jour l'interface utilisateur avec les données retournée par l'API
+  if (newList) {
+    // Mise à jour de l'interface utilisateur avec les données de la liste créée
     addListToListsContainer(newList);
 
-    // on réinitialise le formulaire
+    // Réinitialisation du formulaire et fermeture des modales
     addListFormElement.reset();
-    // on ferme les modales
     closeModals();
-  }else{
-    alert ('un problème est survenu lors de la création de la liste...');
+  } else {
+    alert("Un problème est survenu lors de la création de la liste...");
+  }
+}
+
+// Gestionnaire de soumission du formulaire de modification de liste
+async function handleChangeListFormSubmit(event) {
+  event.preventDefault();
+
+  // Récupération des données du formulaire
+  const changeListFormElement = document.querySelector(
+    "#change-list-modal form"
+  );
+  const changeListFormData = new FormData(changeListFormElement);
+  const listToChange = Object.fromEntries(changeListFormData);
+  const listId = listToChange.list_id;
+
+  const newList = await changeList(listId, listToChange);
+
+  if (newList) {
+    // Mise à jour de l'interface utilisateur avec les données de la liste modifiée
+    updateListDom(listId, listToChange);
+
+    // Réinitialisation du formulaire et fermeture des modales
+    changeListFormElement.reset();
+    closeModals();
+  } else {
+    alert("Un problème est survenu lors de la modification de la liste...");
+  }
+}
+
+// Gestionnaire de fin de glisser-déposer pour les listes
+async function handleListDragEnd(evt) {
+  const listElementList = document.querySelectorAll(".list");
+
+  let position = 0;
+  for (const listElement of listElementList) {
+    const idListElement = listElement.id;
+    const listId = idListElement.substring(5);
+
+    const newList = await changeList(listId, { position: position });
+    position++;
+  }
+}
+
+// Gestionnaire de clic sur le bouton de suppression de liste
+async function handleDeleteListButtonClick(event) {
+  const clickOnDeleteButton = event.currentTarget;
+  const listDeleteElement = clickOnDeleteButton.closest("[slot='list-id']");
+  const listId = listDeleteElement.id.substring(5);
+
+  const deletingList = await deleteList(listId);
+
+  if (deletingList) {
+    listDeleteElement.remove();
+  } else {
+    alert("Un problème est survenu lors de la suppression de la liste...");
   }
 }
 
 // --------------------------------------
-// DOM Modifier (modificateurs du DOM)
+// DOM Modification (Modification du DOM)
 // --------------------------------------
-export async function initLists(){
+
+// Initialisation des listes à partir des données de l'API
+export async function initLists() {
   const lists = await getLists();
 
   lists.forEach((list) => {
@@ -67,45 +185,106 @@ export async function initLists(){
   });
 }
 
-function openAddListModal(){
-  // on sélectionne l'élément que l'on souhaite modifie
-  const addListModalElement = document.querySelector('#add-list-modal');
-
-  // on le modifie
-  addListModalElement.classList.add('is-active');
+// Ouverture de la modale d'ajout de liste
+function openAddListModal() {
+  const addListModalElement = document.querySelector("#add-list-modal");
+  addListModalElement.classList.add("is-active");
 }
 
-function addListToListsContainer(list){
-  console.log(list);
+// Ouverture de la modale de modification de liste
+function openChangeListModal(listId) {
+  const changeListModalElement = document.querySelector("#change-list-modal");
+  changeListModalElement.classList.add("is-active");
 
-  // on récupèrele template
-  const listTemplate = document.querySelector('#list-template');
-  // on accède à son contenu
+  // Indication de l'identifiant de la liste dans le champ caché du formulaire
+  const listIdFormInputElement =
+    changeListModalElement.querySelector("[name='list_id']");
+  listIdFormInputElement.value = listId;
+}
+
+// Ajout d'une liste dans le conteneur de listes
+function addListToListsContainer(list) {
+  // Récupération du modèle de liste
+  const listTemplate = document.querySelector("#list-template");
   const listTemplateContent = listTemplate.content;
-  // on en crée une copie
   const clonedListTemplate = listTemplateContent.cloneNode(true);
 
-  // on modifie le template avec les infos de la liste à créer
-  // nom de la liste :
-  const slotListNameElement = clonedListTemplate.querySelector("[slot='list-name']");
-  console.log(slotListNameElement);
+  // Modification du modèle avec les informations de la liste à créer
+  // Nom de la liste :
+  const slotListNameElement =
+    clonedListTemplate.querySelector("[slot='list-name']");
   slotListNameElement.textContent = list.name;
-  // id de la liste :
-  const slotListIdElement = clonedListTemplate.querySelector("[slot='list-id']");
+
+  // ID de la liste :
+  const slotListIdElement =
+    clonedListTemplate.querySelector("[slot='list-id']");
   slotListIdElement.setAttribute("id", `list-${list.id}`);
 
-  // on récupère le container de liste
-  const listsContainerElement = document.querySelector('#lists-container');
-  // on ajoute la copie du template
+  // Récupération du conteneur de listes
+  const listsContainerElement = document.querySelector("#lists-container");
   listsContainerElement.append(clonedListTemplate);
 
-  // on se met en écoute du click sur le bouton d'ajout de carte lors de la création de la liste
+  // Écoute du clic sur le bouton d'ajout de carte lors de la création de la liste
   listenToClickOnAddCardButton(list.id);
 
-  // création des cartes associées à la liste s'il y a lieu
-  if (list.cards){
+  // Écoute du clic sur le titre de la liste pour la modifier
+  listenToClickOnChangeListButton(list);
+
+  // Écoute du clic sur le bouton de suppression de liste
+  listenToClickOnDeleteListButton(list.id);
+
+  // Création des cartes associées à la liste si elles existent
+  if (list.cards) {
     list.cards.forEach((card) => {
       addCardToList(card);
     });
+  }
+
+  const cardsContainerElement =
+    slotListIdElement.querySelector(".message-body");
+  Sortable.create(cardsContainerElement, {
+    animation: 250,
+    group: "cards",
+    onEnd: (event) => {
+      orderCards(event.to);
+      if (event.from !== event.to) {
+        orderCards(event.from);
+      }
+    },
+  });
+}
+
+// Mise à jour du DOM de la liste
+function updateListDom(listId, listToChange) {
+  if (listToChange.name) {
+    const listSlotName = document.querySelector(
+      `#list-${listId} [slot='list-name']`
+    );
+    listSlotName.innerHTML = listToChange.name;
+  }
+}
+
+// Réordonner les cartes dans une liste
+export async function orderCards(cardsDestination) {
+  const cardsElementInList = cardsDestination.querySelectorAll(".card");
+  const listElement = cardsDestination.closest(".list");
+  const listIdElement = listElement.id;
+  const listId = listIdElement.substring(5);
+  let position = 0;
+
+  for (const card of cardsElementInList) {
+    const cardIdElement = card.id;
+    const cardId = cardIdElement.substring(5);
+    const changingCard = await changeCard(cardId, {
+      position: position,
+      list_id: listId,
+    });
+
+    if (!changingCard) {
+      alert("Un problème est survenu lors du réordonnancement des listes");
+      break;
+    }
+
+    position++;
   }
 }

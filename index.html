@@ -15,21 +15,14 @@
     <!-- Font Awesome (using version 5, as version >=6 does not provide an out-of-the-box CDN)-->
     <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
 
-    <!-- Custom JS -->
-    <!-- 
-    
-    <script defer src="./assets/js/api.js"></script>
-    <script defer src="./assets/js/list.js"></script>
-    <script defer src="./assets/js/card.js"></script>
-    <script defer src="./assets/js/utils.js"></script>
-    -->
-    <!-- petite doc sur async et defer : https://www.alsacreations.com/astuce/lire/1562-script-attribut-async-defer.html -->
+     <!-- petite doc sur async et defer : https://www.alsacreations.com/astuce/lire/1562-script-attribut-async-defer.html -->
     <script defer src="./assets/js/index.js" type="module"></script>
 </head>
 
-<body>
+<body> 
   <header>
-    <h1 class="title is-1 my-5">oKanban</h1>
+    <!-- ID en dure a modifier par la suite pour le rendre dynamique a partir de table.js dans les assets -->
+    <h1 class="title is-1 my-5" id="1">oKanban</h1>
   </header>
 
   <main class="flex-container">
@@ -73,6 +66,30 @@
     </div>
   </div>
 
+  <!-- change a list modal -->
+  <div class="modal" id="change-list-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <form>
+        <div class="modal-card-head">
+          <p class="modal-card-title">Changer une liste</p>
+          <button class="delete close" type="button" aria-label="close"></button>
+        </div>
+
+        <div class="modal-card-body">
+          <label class="label">Nom</label>
+          <input class="input name-input" type="text" name="name" placeholder="${name}">
+        </div>
+
+        <div class="modal-card-foot">
+          <button class="button is-success">Modifier</button>
+          <button class="button close" type="button">Annuler</button>
+        </div>
+        <input type="hidden" name="list_id">
+      </form>
+    </div>
+  </div>
+
   <!-- Add a card modal -->
   <div class="modal" id="add-card-modal">
     <div class="modal-background"></div>
@@ -85,7 +102,7 @@
 
         <div class="modal-card-body">
           <label class="label">Description</label>
-          <textarea name="description" placeholder="Description de la carte"></textarea>
+          <textarea class="input" name="description" placeholder="Description de la carte"></textarea>
         </div>
 
         <div class="modal-card-foot">
@@ -97,19 +114,19 @@
     </div>
   </div>
 
-  <!-- Edit a card modal -->
-  <div class="modal" id="edit-card-modal">
+  <!-- Change a card modal -->
+  <div class="modal" id="change-card-modal">
     <div class="modal-background"></div>
     <div class="modal-card">
       <form>
         <div class="modal-card-head">
-          <p class="modal-card-title">Modifier une carte</p>
+          <p class="modal-card-title">Ajouter une carte</p>
           <button class="delete close" type="button" aria-label="close"></button>
         </div>
 
         <div class="modal-card-body">
           <label class="label">Description</label>
-          <textarea name="description" placeholder="Description de la carte"></textarea>
+          <textarea class="input" name="description" placeholder="Description de la carte"></textarea>
         </div>
 
         <div class="modal-card-foot">
@@ -120,16 +137,40 @@
       </form>
     </div>
   </div>
+  
+  <!-- Change title -->
+  <div class="modal" id="title-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <form>
+        <div class="modal-card-head">
+          <p class="modal-card-title">Titre</p>
+          <button class="delete close" type="button" aria-label="close"></button>
+        </div>
+
+        <div class="modal-card-body">
+          <label class="label">Description</label>
+          <textarea class="input" name="description" placeholder="Description de la carte"></textarea>
+        </div>
+
+        <div class="modal-card-foot">
+          <button class="button is-success">Modifier</button>
+          <button class="button close" type="button">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </body>
 
 <!-- Template pour une liste -->
 <template id="list-template">
-  <section class="list message is-info" slot="list-id">
+  <section class="message is-info list" slot="list-id">
     <div class="message-header">
-      <div class="list-name" slot="list-name"></div>
-      <span class="icon is-clickable" slot="add-card-button"><i class="fas fa-plus"></i></span>
-    </div>
-
+      <div class="list-name is-clickable" slot="list-name"></div>
+      <div class="list-header-icon">
+        <span class="icon is-clickable" slot="add-card-button"><i class="fas fa-plus"></i></span>
+      <span class="icon has-text-danger ml-1" slot="remove-list-button"><i class="fas fa-trash-alt"></i></span>    </div>
+      </div>
     <div class="message-body" slot="list-content">
       <!-- Cards go here -->
     </div>

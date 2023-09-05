@@ -16,6 +16,7 @@ export async function getLists(){
   return lists;
 }
 
+
 export async function createList(newList){
 
   // envoyer une requête en POST sur notre api :
@@ -83,3 +84,109 @@ export async function updateCard(cardId, newCardData){
 
   return updatedCard;
 }
+
+export async function deleteCard(cardId){
+  const response = await fetch(`${apiBaseUrl}/cards/${cardId}`, { method: 'DELETE'});
+
+  // on renvoie true si ok vaut true et false si ok vaut false
+  return response.ok;
+}
+
+export async function updateCard(cardId, newCardData){
+  const response = await fetch(`${apiBaseUrl}/cards/${cardId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(newCardData),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  });
+
+  if (!response.ok){
+    return null;
+  }
+
+  const updatedCard = await response.json();
+
+  return updatedCard;
+}
+
+export async function changeCard(changeCardId, changeCardObject) {
+  const response = await fetch(`${apiBaseUrl}/cards/${changeCardId}`, {
+    method: "PATCH",
+    body: JSON.stringify(changeCardObject),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const changingCard = await response.json();
+
+  return changingCard;
+}
+
+export async function deleteCard(cardId) {
+  const response = await fetch(`${apiBaseUrl}/cards/${cardId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const deletingCard = await response.json();
+
+  return deletingCard;
+}
+
+export async function changeList(newList, listToChange) {
+  const response = await fetch(`${apiBaseUrl}/lists/${newList}`, {
+    method: "PATCH",
+    body: JSON.stringify(listToChange),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const changeList = await response.json();
+
+  return changeList;
+}
+
+export async function deleteList(listId) {
+  const response = await fetch(`${apiBaseUrl}/lists/${listId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const deletingCard = await response.json();
+
+  return deletingCard;
+}
+
+
+// fonction pour récupération du titre 
+export async function getTable(id){
+  const tableResponse = await fetch(`${apiBaseUrl}/table/${id}`);
+  const table = await tableResponse.json();
+
+  return table;
+}
+
+// ! Création d'un fonction pour mettre a jour le titre (pas de delete possible, ni de creation il a deja une valeur de okanban)
