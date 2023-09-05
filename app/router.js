@@ -7,6 +7,10 @@ const listController = require('./controllers/listController')
 const labelController = require('./controllers/labelController')
 const tableController = require("./controllers/tableController");
 
+router.get("/", (req, res) => {
+  res.sendFile(__dirname + "../assets/index.html");
+});
+
 // list
 router.get('/lists', listController.getLists)
 router.get('/lists/:id', listController.getOneList)
