@@ -8,7 +8,7 @@ const labelController = require('./controllers/labelController')
 const tableController = require("./controllers/tableController");
 
 router.get("/", (req, res) => {
-  res.sendFile(__dirname + "../dist/index.html");
+  res.sendFile(__dirname + "/../dist/index.html");
 });
 
 // list
