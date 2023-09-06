@@ -1,5 +1,3 @@
-
-
 const { DataTypes, Model } = require('sequelize');
 const client = require('../database');
 

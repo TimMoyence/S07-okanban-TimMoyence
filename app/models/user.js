@@ -1,5 +1,3 @@
-
-
 const { DataTypes, Model } = require('sequelize');
 const client = require('../database');
 
@@ -13,13 +11,6 @@ User.init(
     password: DataTypes.TEXT,
     firstname: DataTypes.TEXT,
     lastname: DataTypes.TEXT,
-    projetId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "projet",
-        key: "id",
-      },
-    },
   },
   {
     sequelize: client,

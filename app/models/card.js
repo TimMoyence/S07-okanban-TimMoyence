@@ -1,5 +1,3 @@
-
-
 const { DataTypes, Model } = require('sequelize');
 const client = require('../database');
 
@@ -8,7 +6,6 @@ class Card extends Model {};
 
 // on définit notre classe
 Card.init({
-
     description: DataTypes.TEXT,
     position: DataTypes.SMALLINT,
     color: DataTypes.STRING,

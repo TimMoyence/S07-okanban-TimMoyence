@@ -9,6 +9,13 @@ List.init(
   {
     name: DataTypes.TEXT,
     position: DataTypes.SMALLINT,
+    projectId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: 'project',
+          key: 'id'
+        }
+      },
   },
   {
     sequelize: client,
