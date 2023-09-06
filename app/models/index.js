@@ -3,27 +3,31 @@ const Card = require('./card');
 const Label = require('./label');
 const List = require('./list');
 const User = require('./user');
-const Table = require('./table');
+const Projet = require('./projet');
 
 
 // on spécifie les associations
 
-// une table detient un user
-Table.hasOne(User, {
-  as: 'userName',
-  foreignKey: 'user_id',
+// un user detient plusieurs Projets 
+User.hasMany(Projet, {
+    as: "projet",
+    foreignKey: "user_id",
 });
-// un user detient une table 
-User.belongsTo(Table)
 
-// Une table contient plusieurs liste
-Table.hasMany(List,{
+// une Projet detient un user
+Projet.belongsTo(User, {
+  as: 'userName',
+});
+
+
+// Une Projet contient plusieurs liste
+Projet.hasMany(List,{
     as: 'listName',
+    foreignKey: "list_id",
 })
-// Une liste contient une seul table
-List.belongsTo(Table, {
-  as: "table",
-  foreignKey: "table_id",
+// Une liste contient une seul Projet
+List.belongsTo(Projet, {
+  as: "projetName",
 });
 
 // Une liste a plusieurs cartes

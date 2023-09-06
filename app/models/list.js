@@ -1,25 +1,19 @@
-const { DataTypes, Model } = require('sequelize');
-const client = require('../database');
+const { DataTypes, Model } = require("sequelize");
+const client = require("../database");
 
 // on fait hériter notre nouvelle classe de Model
-class List extends Model {};
+class List extends Model {}
 
 // on définit notre classe
-List.init({
-
+List.init(
+  {
     name: DataTypes.TEXT,
     position: DataTypes.SMALLINT,
-    tableId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: 'table',
-          key: 'id'
-        }
-      },
-}, {
+  },
+  {
     sequelize: client,
-    tableName: 'list'
-});
-
+    tableName: "list",
+  }
+);
 
 module.exports = List;
