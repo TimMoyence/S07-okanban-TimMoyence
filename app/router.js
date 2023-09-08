@@ -6,6 +6,7 @@ const router = express.Router();
 const listController = require('./controllers/listController')
 const labelController = require('./controllers/labelController')
 const tableController = require("./controllers/tableController");
+const userController = require('./controllers/userController');
 
 router.get("/", (req, res) => {
   res.sendFile('index.html', {root: './dist'});
@@ -33,6 +34,10 @@ router.delete('/cards/:cardId/label/:labelId', labelController.removeLabelFromCa
 // table
 router.get('/table/:id', tableController.getTableOfUser)
 
+
+// User 
+router.post('/register', userController.registerAction)
+router.post("/login", userController.loginAction);
 
 // 404 
 router.use((req, res) => {

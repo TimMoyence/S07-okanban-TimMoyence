@@ -1,6 +1,7 @@
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
+const session = require("express-session");
 const cors = require('cors');
 const app = express();
 const router = require('./app/router.js');
@@ -14,23 +15,23 @@ app.use(cors({
     origin: ['http://127.0.0.1:5501', 'http://127.0.0.1:5500', 'http://www.monsite.com'],
 
     Note, en production, il est conseillé de règler finement notre politique de CORS.
-
-    TOPO pour mise en place de la politique de CORS sur un serveur express :
-
-    1 - installer le module cors :
-    npm install cors
-
-    2 - require le module (dans le point d'entrée) :
-    const cors = require('cors'); 
-
-    3 - brancher le middleware cors sur notre application express :
-    app.use(cors());
     */
 }));
 
 app.use(express.static("dist"));
 // pour réagir aux formulaires, on rajoute ce middleware
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: process.env.SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+      secure: false,
+      maxAge: 60 * 60 * 10000 * 24,
+    },
+  })
+);
 
 app.use(router);
 
