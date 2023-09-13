@@ -160,12 +160,30 @@ export async function deleteList(listId) {
 }
 
 // Fonction pour récupérer le titre d'une table depuis le backend
-export async function getTable(id) {
-  const tableResponse = await fetch(`${apiBaseUrl}/table/${id}`);
-  const table = await tableResponse.json();
+export async function getProject(id) {
+  const projectResponse = await fetch(`${apiBaseUrl}/project/${id}`);
+  const project = await projectResponse.json();
 
-  return table;
+  return project;
 }
 
+
+export async function logIn(log){
+  const response = await fetch(`${apiBaseUrl}/login`, {
+    method: "POST",
+    body: JSON.stringify(log),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+  if (!response.ok) {
+    return null;
+  }
+
+  const logIn = await response.json();
+
+  return logIn;
+}
 // Fonction pour mettre à jour le titre d'une table (pas de suppression ni de création possible, car il y a déjà une valeur de Kanban)
 // ! Création d'un fonction pour mettre a jour le titre (pas de delete possible, ni de creation il a deja une valeur de okanban)
+

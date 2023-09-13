@@ -8,3 +8,7 @@
 2 - Recupération du nom de la table a parti de l'id du user intégré dans le HTML que l'on donne a getTable
 
 3 - Réalisation d'un api et implémentation dans : handleChangeTitleFormSubmint pour permettre de changer le nom de la table, cela ce fait toujours a partir de l'id du user  
+
+
+## Une fois le client connecté et le projet initialisé 
+- Quand on créé une liste il est important d'avoir accès en remontant a l'id du projet pour le créer dans la BDD

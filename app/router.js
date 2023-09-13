@@ -5,7 +5,7 @@ const router = express.Router();
 
 const listController = require('./controllers/listController')
 const labelController = require('./controllers/labelController')
-const tableController = require("./controllers/tableController");
+const projectController = require("./controllers/projectController");
 const userController = require('./controllers/userController');
 
 router.get("/", (req, res) => {
@@ -31,9 +31,12 @@ router.delete('/cards/:id', cardController.deleteCard);
 router.post('/cards/:id/tags', labelController.associateLabelToCard);
 router.delete('/cards/:cardId/label/:labelId', labelController.removeLabelFromCard)
 
-// table
-router.get('/table/:id', tableController.getTableOfUser)
-
+// Projet
+// Route permet de récupérer en fonction de l'ID mais si plusieurs projet il faut pouvoir laiszser au client le choix ? Menu déroulant ? 
+router.get("/project/:id", projectController.getProjectName);
+// Route permettant de créer un projet a appeler a la première connection (login)
+router.post("/project", projectController.createProject)
+// Vu que l'on est sur une single page avec une seul application pour chaque personne il y aura un id de 1
 
 // User 
 router.post('/register', userController.registerAction)

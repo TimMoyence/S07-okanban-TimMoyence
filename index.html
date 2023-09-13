@@ -28,7 +28,7 @@
     <header>
       <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-          <!-- ID en dure a modifier par la suite pour le rendre dynamique a partir de table.js dans les assets -->
+          <!-- ID en dure a modifier par la suite pour le rendre dynamique a partir de project.js dans les assets -->
           <h1 class="title is-1 my-5" id="1">oKanban</h1>
         </div>
         <div class="navbar-end">
@@ -37,7 +37,9 @@
               <a class="button has-background-info-dark">
                 <strong>Sign up</strong>
               </a>
-              <a class="button is-light"> Log in </a>
+              <a class="button is-light logIn"> Login </a>
+              <!-- Le faire disparaitre voir la doc de bulma -->
+              <a class="button is-light logout "> Logout </a>
             </div>
           </div>
         </div>
@@ -286,8 +288,8 @@
         </form>
       </div>
     </div>
-    <!-- Register -->
-    <div class="modal" id="signUp-modal">
+    <!-- LogIn -->
+    <div class="modal" id="logIn-modal">
       <div class="modal-background"></div>
       <div class="modal-card">
         <form>
@@ -304,7 +306,7 @@
             <input
               class="input email"
               id="email"
-              name="description"
+              name="email"
               placeholder="Your email"
             />
           </div>
@@ -313,7 +315,7 @@
             <input
               class="input password"
               id="password"
-              name="passwordConfirm"
+              name="password"
               placeholder="Put your password here"
             />
           </div>

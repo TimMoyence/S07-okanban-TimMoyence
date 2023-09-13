@@ -18,8 +18,8 @@ import {
 import {
   listenToClickOnTitle,
   listenToSubmintOnChangeTitleForm,
-} from "./table.js";
-
+} from "./projet.js";
+import { listenToClickOnLogIn, listenToSubmintLogInForm } from "./user.js";
 // Ton code JavaScript ici !
 // console.log(apiBaseUrl);
 
@@ -36,6 +36,8 @@ function listenToUserActions(){
   listenToDragOnList();
   listenToClickOnTitle();
   listenToSubmintOnChangeTitleForm();
+  listenToClickOnLogIn();
+  listenToSubmintLogInForm();
 }
 
 // --------------------------------------
