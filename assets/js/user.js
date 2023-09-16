@@ -27,23 +27,20 @@ function handleLogIn(event) {
 
 async function handleLogInFormSubmint(event){
   event.preventDefault();
-  const ligInFormElement = document.querySelector("#logIn-modal form");
+  const logInFormElement = document.querySelector("#logIn-modal form");
 
-  const ligInFormData = new FormData(ligInFormElement);
-  const ligInObject = Object.fromEntries(ligInFormData);
-  console.log(ligInObject);
-  const logInEffective = await logIn(ligInObject);
-
+  const logInFormData = new FormData(logInFormElement);
+  const logInObject = Object.fromEntries(logInFormData);
+  const logInEffective = await logIn(logInObject);
+  // ! il va falloir enlever le mdp a logInObject
   if (logInEffective) {
-    console.log(logInEffective)
-    // ! Il faut un template qui se déclence une fois la connection faite et qui va rajouter le nom / Hidde loggin et ouvrir dehide logout
+    updateButtonLoginCheck(logInEffective)
     // Réinitialisation du formulaire et fermeture des modales
-    ligInFormElement.reset();
+    logInFormElement.reset();
     closeModals();
   } else {
     alert("Un problème est survenu lors du loggin...");
   }
-  
 }
 
 // --------------------------------------
@@ -54,10 +51,24 @@ function openLogInModal() {
   addTitleModalElement.classList.add("is-active");
 }
 
+function updateButtonLoginCheck(user){
+  const loginButtonHide = document.querySelector(".logIn");
+  loginButtonHide.classList.add("is-hidden");
+  const logoutButtonSee = document.querySelector(".logout");
+  logoutButtonSee.classList.remove("is-hidden");
+  const userIsConnected = document.querySelector(".user");
+  userIsConnected.classList.remove("is-hidden");
+  userIsConnected.innerHTML = user.userName
+  const signUpButtonHide = document.querySelector(".signUp");
+  signUpButtonHide.classList.add("is-hidden");
+  // integrer l'id dans userIsConnected
+
+  // appeler l afonction de logout 
+}
+
 function updateTitleDom(newTitle){
     const titleElement = document.querySelector(".title");
     titleElement.textContent = newTitle.description;
-
 }
 
 

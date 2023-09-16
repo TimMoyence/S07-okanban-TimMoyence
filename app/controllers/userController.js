@@ -84,9 +84,21 @@ const userController = {
           if (ok) {
             delete userExist.dataValues.password;
             req.session.user = userExist;
-            return res.json(
-              "Vous êtes maintenant connecté, mais ne vous inquiétez pas, nous ne partagerons pas vos secrets avec le reste de l'univers, sauf si vous les avez déjà partagés sur les réseaux sociaux ! "
-            );
+
+            // ! Recuperer le user avec ses projet et les mettre a dispo dans le front
+            const userWithProject = await User.findByPk(userExist.id, { 
+                include : 'project',
+            })
+            // ? une fois la récupération du projet faite Atention a bien récuperer les projets pour les mettre dans req.session
+            console.log(userWithProject.project)
+            // const projectOfThisUser = userWithProject.dataValues.project
+            // req.session.project = projectOfThisUser
+            console.log(userExist)
+            return res.json({
+                message: "Vous êtes maintenant connecté, mais ne vous inquiétez pas, nous ne partagerons pas vos secrets avec le reste de l'univers, sauf si vous les avez déjà partagés sur les réseaux sociaux !",
+                userId: userExist.id,
+                userName: `${userExist.firstname} ${userExist.lastname}`
+            });
           }
         } catch (e) {
           console.trace(e);

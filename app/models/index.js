@@ -58,7 +58,7 @@ Project.belongsToMany(User, {
 
 // Un user aura plusieurs Projectt
 User.belongsToMany(Project, {
-  as: "projects",
+  as: "project",
   through: "project_has_collaborators",
   foreignKey: "user_id",
   otherKey: "project_id",
