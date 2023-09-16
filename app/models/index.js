@@ -4,7 +4,8 @@ const Label = require('./label');
 const List = require('./list');
 const User = require('./user');
 const Project = require('./project');
-
+const ProjectCollaborator = require('./projectCollaborator')
+const CardLabel = require('./cardLabel')
 // on spécifie les associations
 
 
@@ -66,4 +67,4 @@ User.belongsToMany(Project, {
 
 
 // on exporte les modèles modifiés
-module.exports = { Card, List, Label, Project, User };
+module.exports = { Card, List, Label, Project, User, ProjectCollaborator, CardLabel };

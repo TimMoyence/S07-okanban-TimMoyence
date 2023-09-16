@@ -19,7 +19,7 @@ import {
   listenToClickOnTitle,
   listenToSubmintOnChangeTitleForm,
 } from "./projet.js";
-import { listenToClickOnLogIn, listenToSubmintLogInForm } from "./user.js";
+import { listenToClickOnLogIn, listenToSubmintLogInForm, listenToClickOnSignUp, listenToSubmintSignUpForm } from "./user.js";
 // Ton code JavaScript ici !
 // console.log(apiBaseUrl);
 
@@ -38,6 +38,8 @@ function listenToUserActions(){
   listenToSubmintOnChangeTitleForm();
   listenToClickOnLogIn();
   listenToSubmintLogInForm();
+  listenToClickOnSignUp();
+  listenToSubmintSignUpForm();
 }
 
 // --------------------------------------

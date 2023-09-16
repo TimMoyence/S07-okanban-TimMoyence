@@ -2,7 +2,7 @@
 
 // Import des modules nécessaires
 import { closeModals } from "./utils.js";
-import { logIn } from "./api.js"
+import { logIn, signUp } from "./api.js"
 // --------------------------------------
 // Event Listening (Écoute des événements)
 // --------------------------------------
@@ -16,6 +16,17 @@ export function listenToSubmintLogInForm(){
     const LogInFormElement = document.querySelector("#logIn-modal form");
     LogInFormElement.addEventListener("submit", handleLogInFormSubmint);
 }
+
+export function listenToClickOnSignUp(){
+    const registerElement = document.querySelector(".signUp");
+    registerElement.addEventListener("click", handleSignUp);
+}
+
+export function listenToSubmintSignUpForm(){
+    const LogInFormElement = document.querySelector("#signUp-modal form");
+    LogInFormElement.addEventListener("submit", handleSignUpFormSubmint);
+}
+
 // --------------------------------------
 // Event Handlers (Gestionnaires d'événements)
 // --------------------------------------
@@ -32,7 +43,7 @@ async function handleLogInFormSubmint(event){
   const logInFormData = new FormData(logInFormElement);
   const logInObject = Object.fromEntries(logInFormData);
   const logInEffective = await logIn(logInObject);
-  // ! il va falloir enlever le mdp a logInObject
+
   if (logInEffective) {
     updateButtonLoginCheck(logInEffective)
     // Réinitialisation du formulaire et fermeture des modales
@@ -43,12 +54,42 @@ async function handleLogInFormSubmint(event){
   }
 }
 
+async function handleSignUpFormSubmint(event){
+  event.preventDefault();
+  const signUpFormElement = document.querySelector("#signUp-modal form");
+
+  const signUpFormData = new FormData(signUpFormElement);
+  const signUpObject = Object.fromEntries(signUpFormData);
+
+  const signUpEffective = await signUp(signUpObject);
+
+  if (signUpEffective) {
+    console.log(signUpEffective)
+    // Réinitialisation du formulaire et fermeture des modales
+    signUpFormElement.reset();
+    closeModals();
+  } else {
+    alert("Un problème est survenu lors du loggin...");
+  }
+    
+}
+
+function handleSignUp(event) {
+  const SignUpElementClick = event.target;
+  openSignUpModal(SignUpElementClick);
+}
+
 // --------------------------------------
 // DOM Modification (Modification du DOM)
 // --------------------------------------
 function openLogInModal() {
   const addTitleModalElement = document.querySelector("#logIn-modal");
   addTitleModalElement.classList.add("is-active");
+}
+
+function openSignUpModal(){
+  const newUserModalElement = document.querySelector("#signUp-modal");
+  newUserModalElement.classList.add("is-active")
 }
 
 function updateButtonLoginCheck(user){

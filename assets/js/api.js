@@ -184,6 +184,23 @@ export async function logIn(log){
 
   return logIn;
 }
-// Fonction pour mettre à jour le titre d'une table (pas de suppression ni de création possible, car il y a déjà une valeur de Kanban)
-// ! Création d'un fonction pour mettre a jour le titre (pas de delete possible, ni de creation il a deja une valeur de okanban)
+
+
+export async function signUp(signUp){
+  const response = await fetch(`${apiBaseUrl}/register`, {
+    method: "POST",
+    body: JSON.stringify(signUp),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+  console.log(response)
+  if (!response.ok) {
+    return null;
+  };
+
+  const signUpInformation = await response.json()
+  
+  return signUpInformation;
+}
 

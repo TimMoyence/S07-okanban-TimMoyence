@@ -1,4 +1,4 @@
-const { User } = require("../models")
+const { User, Project } = require("../models")
 const bcrypt = require("bcrypt");
 const emailValidator = require("email-validator");
 
@@ -43,6 +43,10 @@ const userController = {
             email,
             password : hash,
           });
+          
+          await Project.create({
+            title : "Okanban"
+          })
 
           res.json(
             "L'utilisateur a bien été créé ! C'est comme si nous avions ajouté une nouvelle étoile à notre galaxie d'utilisateurs brillants."
@@ -90,6 +94,7 @@ const userController = {
                 include : 'project',
             })
             // ? une fois la récupération du projet faite Atention a bien récuperer les projets pour les mettre dans req.session
+            console.log(userWithProject)
             console.log(userWithProject.project)
             // const projectOfThisUser = userWithProject.dataValues.project
             // req.session.project = projectOfThisUser
