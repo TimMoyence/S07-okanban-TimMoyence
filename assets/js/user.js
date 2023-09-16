@@ -103,7 +103,9 @@ function updateButtonLoginCheck(user){
   const signUpButtonHide = document.querySelector(".signUp");
   signUpButtonHide.classList.add("is-hidden");
   // integrer l'id dans userIsConnected
-
+  // ! récupération compliqué a voir quand on fait les associations 
+  console.log(user.id)
+  console.log(user.project.dataValues)
   // appeler l afonction de logout 
 }
 

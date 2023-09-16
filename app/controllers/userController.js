@@ -1,4 +1,4 @@
-const { User, Project } = require("../models")
+const { User, Project, ProjectCollaborator } = require("../models")
 const bcrypt = require("bcrypt");
 const emailValidator = require("email-validator");
 
@@ -37,16 +37,25 @@ const userController = {
           const salt = await bcrypt.genSalt(10);
           const hash = await bcrypt.hash(password, salt)
 
-          await User.create({
+          // Créez un utilisateur
+          const user = await User.create({
             firstname,
             lastname,
             email,
-            password : hash,
+            password: hash,
           });
-          
-          await Project.create({
-            title : "Okanban"
-          })
+
+          // Créez un projet
+          const project = await Project.create({
+            title: "Okanban",
+          });
+
+          // Associez l'utilisateur au projet en créant une entrée dans la table de liaison
+          await ProjectCollaborator.create({
+            project_id: project.id,  // L'ID du projet créé précédemment
+            user_id: user.id,        // L'ID de l'utilisateur créé précédemment
+          });
+
 
           res.json(
             "L'utilisateur a bien été créé ! C'est comme si nous avions ajouté une nouvelle étoile à notre galaxie d'utilisateurs brillants."

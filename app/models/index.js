@@ -55,6 +55,7 @@ Project.belongsToMany(User, {
   through: "project_has_collaborators",
   foreignKey: "project_id",
   otherKey: "user_id",
+  timestamps: false
 });
 
 // Un user aura plusieurs Projectt
@@ -63,6 +64,7 @@ User.belongsToMany(Project, {
   through: "project_has_collaborators",
   foreignKey: "user_id",
   otherKey: "project_id",
+  timestamps: false
 });
 
 
