@@ -20,8 +20,8 @@
 
 
 fin journée 16 septembre : ToDO prochaines étape 
-Le login fonctionne
-Le **register coté front** A voir comment récupérer dans le login les information necessaire pour avoir tous ce dont on a besoin coté front pour le titre et le projet et le logout 
+
+Le **register coté front** A voir comment récupérer dans le login les informations necessaires pour avoir tout ce dont on a besoin coté front pour le titre et le projet et le logout 
 
 - Un fois cela réaliser je vais pouvoir récupérer toutes le infos des table et des table de laisons pour les rendre dispo lors du login et donc avoir un user avec son okanban 
 - ensuite il faudra appeler les fonction au bon endroit (la création des listes, des card etc après le login car on recupe a ce moment les card et liste associé a la personne (et pas avant))

@@ -210,12 +210,10 @@ function addListToListsContainer(list) {
   const clonedListTemplate = listTemplateContent.cloneNode(true);
 
   // Modification du modèle avec les informations de la liste à créer
-  // Nom de la liste :
-  const slotListNameElement =
+    const slotListNameElement =
     clonedListTemplate.querySelector("[slot='list-name']");
   slotListNameElement.textContent = list.name;
 
-  // ID de la liste :
   const slotListIdElement =
     clonedListTemplate.querySelector("[slot='list-id']");
   slotListIdElement.setAttribute("id", `list-${list.id}`);

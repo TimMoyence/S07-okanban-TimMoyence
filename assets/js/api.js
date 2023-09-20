@@ -194,7 +194,6 @@ export async function signUp(signUp){
       "Content-type": "application/json; charset=UTF-8",
     },
   });
-  console.log(response)
   if (!response.ok) {
     return null;
   };
@@ -204,3 +203,16 @@ export async function signUp(signUp){
   return signUpInformation;
 }
 
+export async function getSession(){
+ const response = await fetch(`${apiBaseUrl}/getSessionData`);
+ if (!response.ok) {
+    return null;
+  };
+  console.log('JE PASSE PAR LA ')
+  const getSessionData = await response.json()
+  console.log('Mais pas la ')
+
+  console.log(getSessionData)
+
+  return getSessionData;
+}

@@ -2,7 +2,7 @@
 
 // Import des modules nécessaires
 import { closeModals } from "./utils.js";
-import { logIn, signUp } from "./api.js"
+import { logIn, signUp, getSession } from "./api.js"
 // --------------------------------------
 // Event Listening (Écoute des événements)
 // --------------------------------------
@@ -92,7 +92,7 @@ function openSignUpModal(){
   newUserModalElement.classList.add("is-active")
 }
 
-function updateButtonLoginCheck(user){
+async function updateButtonLoginCheck(user){
   const loginButtonHide = document.querySelector(".logIn");
   loginButtonHide.classList.add("is-hidden");
   const logoutButtonSee = document.querySelector(".logout");
@@ -103,10 +103,9 @@ function updateButtonLoginCheck(user){
   const signUpButtonHide = document.querySelector(".signUp");
   signUpButtonHide.classList.add("is-hidden");
   // integrer l'id dans userIsConnected
-  // ! récupération compliqué a voir quand on fait les associations 
-  console.log(user.id)
-  console.log(user.project.dataValues)
-  // appeler l afonction de logout 
+  const sessionData = await getSession();
+  console.log(sessionData)
+
 }
 
 function updateTitleDom(newTitle){

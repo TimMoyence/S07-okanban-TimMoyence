@@ -1,10 +1,11 @@
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
-const session = require("express-session");
+const expresSession = require('express-session');
 const cors = require('cors');
 const app = express();
 const router = require('./app/router.js');
+const userMiddleware = require('./app/middleware/userMiddleware.js')
 
 app.use(express.json());
 
@@ -19,19 +20,23 @@ app.use(cors({
 }));
 
 app.use(express.static("dist"));
-// pour réagir aux formulaires, on rajoute ce middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(
-  session({
+
+// * session
+const session = expresSession({
     secret: process.env.SECRET,
     resave: true,
     saveUninitialized: true,
     cookie: {
-      secure: false,
-      maxAge: 60 * 60 * 10000 * 24,
+        secure: false,
+        maxAge: 60 * 60 * 1000 * 24,
     },
-  })
-);
+});
+
+app.use(session);
+app.use(userMiddleware);
+
+// * permet d'obtenir req.body et de gérer les requêtes post au format formData
+app.use(express.urlencoded({ extended: false }));
 
 app.use(router);
 

@@ -39,7 +39,6 @@ function handleChangeTitleFormSubmint(event){
 
   updateTitleDom(changeTitleObject);
 
-  // Réinitialisation du formulaire et fermeture des modales
   changeTitleFormElement.reset();
   closeModals();
 }
@@ -60,9 +59,3 @@ function updateTitleDom(newTitle){
     titleElement.textContent = newTitle.description;
 
 }
-
-
-
-// ! 1- faire un fonction de création de la table pour récuperer le titre et le créer, penser a rajouter le user_id dans la value du titre => il faut créer de quoi ce connecter avant ça 
-// ? export async function addTableToContainer() {}
-

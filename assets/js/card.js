@@ -1,6 +1,3 @@
-// Ensemble de fonctions permettant la gestion des cartes
-
-// Import des modules nécessaires
 import { closeModals } from "./utils.js";
 import { createCard, changeCard, deleteCard } from "./api.js";
 import { orderCards } from "./list.js";
@@ -9,13 +6,17 @@ import { orderCards } from "./list.js";
 // Event Listening (Écoute des événements)
 // --------------------------------------
 
-// Écouteur de soumission du formulaire d'ajout de carte
+/**
+ * Listener for the form submission to add a card
+ */
 export function listenToSubmitOnAddCardForm() {
   const addCardFormElement = document.querySelector("#add-card-modal form");
   addCardFormElement.addEventListener("submit", handleAddCardFormSubmit);
 }
 
-// Écouteur de soumission du formulaire de modification de carte
+/**
+ * Listener for the form submission to change a card
+ */
 export function listenToSubmitOnChangeCardForm() {
   const changeCardFormElement = document.querySelector(
     "#change-card-modal form"
@@ -23,7 +24,10 @@ export function listenToSubmitOnChangeCardForm() {
   changeCardFormElement.addEventListener("submit", handleChangeCardFormSubmit);
 }
 
-// Écouteur de clic sur le bouton d'ajout de carte pour une liste spécifique
+/**
+ * Listener for click to add a specific card
+ * @param {string} listId Id of the liste where we want to put a card 
+ */
 export function listenToClickOnAddCardButton(listId) {
   const addCardButtonElement = document.querySelector(
     `#list-${listId} [slot='add-card-button']`
@@ -31,7 +35,10 @@ export function listenToClickOnAddCardButton(listId) {
   addCardButtonElement.addEventListener("click", handleAddCardButtonClick);
 }
 
-// Écouteur de clic sur le bouton de modification de carte
+/**
+ * Listener for click to change a specific card 
+ * @param {string} cardId Id of the card
+ */
 function listenToClickOnChangeCardButton(cardId) {
   const changeCardButtonElement = document.querySelector(
     `#card-${cardId} [slot='edit-card-button']`
@@ -42,7 +49,10 @@ function listenToClickOnChangeCardButton(cardId) {
   );
 }
 
-// Écouteur de clic sur le bouton de suppression de carte
+/**
+ * Listener for click to remove a specific card 
+ * @param {string} cardId Id of the card
+ */
 function listenToClickOnDeleteCardButton(cardId) {
   const deleteCardButtonElement = document.querySelector(
     `#card-${cardId} [slot='remove-card-button']`
@@ -57,7 +67,11 @@ function listenToClickOnDeleteCardButton(cardId) {
 // Event Handlers (Gestionnaires d'événements)
 // --------------------------------------
 
-// Gestionnaire de soumission du formulaire d'ajout de carte
+/**
+ * Handle the submission of the card addition form
+ * @param {Event} event Form subsmission event
+ * @returns {Promise<void>} promise resolved once the card is successfully created
+ */
 async function handleAddCardFormSubmit(event) {
   event.preventDefault();
 
@@ -73,7 +87,6 @@ async function handleAddCardFormSubmit(event) {
   addCardToList(createdCard);
 
   if (createdCard) {
-    // Réinitialisation du formulaire et fermeture des modales
     addCardFormElement.reset();
     closeModals();
 
@@ -81,7 +94,12 @@ async function handleAddCardFormSubmit(event) {
     alert ('un problème est survenu lors de la création de la carte...');
   }
 }
-// Gestionnaire de clic sur le bouton de suppression de carte
+
+/**
+ * Handle the click to delete card
+ * @param {Event} event Button delete click event
+ * @returns {Promise<void>} promise resolved once the card is successfully delete
+ */
 async function handleDeleteCardButtonClick(event) {
 
   const clickedButtonElement = event.currentTarget;
@@ -90,14 +108,17 @@ async function handleDeleteCardButtonClick(event) {
   const cardId = Number(idValue.substring(5));
   const deletedCard = await deleteCard(cardId);
   if (deletedCard) {
-    // Mise à jour de l'interface utilisateur avec les données de la carte supprimée
     cardDeleteElement.remove();
   } else {
     alert("Un problème est survenu lors de la suppression de la carte...");
   }
 }
 
-// Gestionnaire de soumission du formulaire de modification de carte
+/**
+ * Handle the submission of the changing card form
+ * @param {Event} event Form subsmission event
+ * @returns {Promise<void>} promise resolved once the card is successfully change
+ */
 async function handleChangeCardFormSubmit(event) {
   event.preventDefault();
   const changeCardFormElement = document.querySelector(
@@ -110,10 +131,7 @@ async function handleChangeCardFormSubmit(event) {
   const changeThisCard = await changeCard(changeCardId, changeCardObject);
 
   if (changeThisCard) {
-    // Mise à jour de l'interface utilisateur avec les données de la carte modifiée
     updateCardDom(changeCardId, changeCardObject);
-
-    // Réinitialisation du formulaire et fermeture des modales
     changeCardFormElement.reset();
     closeModals();
   } else {
@@ -121,25 +139,27 @@ async function handleChangeCardFormSubmit(event) {
   }
 }
 
-// Gestionnaire de clic sur le bouton d'ajout de carte
+/**
+ * Handle the click to add card
+ * @param {Event} event Button Add click event
+ */
 function handleAddCardButtonClick(event) {
   const clickedButtonElement = event.currentTarget;
   const listIdElement = clickedButtonElement.closest("[slot=list-id]");
   const idValue = listIdElement.id;
   const listId = Number(idValue.substring(5));
-
-  // Demande d'affichage de la modal en précisant à quelle liste elle permet d'ajouter une carte
   openAddCardModal(listId);
 }
 
-// Gestionnaire de clic sur le bouton de modification de carte
+/**
+ * Handle the click to change card
+ * @param {Event} event Button change click event
+ */
 function handleChangeCardButtonClick(event) {
   const clickedButtonElement = event.currentTarget;
   const cardIdElement = clickedButtonElement.closest("[slot=card-id]");
   const idValue = cardIdElement.id;
   const cardId = Number(idValue.substring(5));
-
-  // Demande d'affichage de la modal en précisant à quelle carte elle permet d'ajouter une carte
   openChangeCardModal(cardId);
 }
 
@@ -147,65 +167,77 @@ function handleChangeCardButtonClick(event) {
 // DOM Modification (Modification du DOM)
 // --------------------------------------
 
-// Ouverture de la modale d'ajout de carte pour une liste spécifique
+
+/**
+ * Open modal to add card on a specific list
+ * @param {string} listId Identification of the list where we want add card
+ */
 function openAddCardModal(listId) {
   const addListModalElement = document.querySelector("#add-card-modal");
   addListModalElement.classList.add("is-active");
 
-  // Indication de l'identifiant de la liste dans le champ caché du formulaire
   const listIdFormInputElement =
     addListModalElement.querySelector("[name='list_id']");
   listIdFormInputElement.value = listId;
 }
 
-// Ouverture de la modale de modification de carte
+/**
+ * Open modal to modify card 
+ * @param {string} cardId Identification of the card Id
+ * @param {string} card.list_id - The ID of the list to which the card belongs.
+ * @param {string} card.description - The description of the card.
+ * @param {string} card.id - The unique ID of the card.
+ */
 function openChangeCardModal(cardId) {
   const addcardModalElement = document.querySelector("#change-card-modal");
   addcardModalElement.classList.add("is-active");
 
-  // Indication de l'identifiant de la carte dans le champ caché du formulaire
   const cardIdFormInputElement =
     addcardModalElement.querySelector("[name='card_id']");
   cardIdFormInputElement.value = cardId;
 }
 
-// Ajout d'une carte à une liste
+/**
+ * Add card in the DOM and call the card listen or order function
+ *
+ * @param {Object} card - An object containing all the information of the card to modify.
+ * @param {string} card.list_id - The ID of the list to which the card belongs.
+ * @param {string} card.description - The description of the card.
+ * @param {string} card.id - The unique ID of the card.
+ */
 export function addCardToList(card) {
-  // Récupération de l'emplacement où insérer la carte
   const cardsContainerElement = document.querySelector(
     `#list-${card.list_id} [slot='list-content']`
   );
 
-  // Récupération du modèle de carte
   const cardTemplate = document.querySelector("#card-template");
   const cardTemplateContent = cardTemplate.content;
   const clonedCardTemplate = cardTemplateContent.cloneNode(true);
   const clonedCardElement = clonedCardTemplate.querySelector(".card");
 
-  // Modification du modèle avec les informations de la carte à créer
-  // Description de la carte :
   const slotCardDescriptionElement = clonedCardElement.querySelector(
     "[slot='card-description']"
   );
   slotCardDescriptionElement.textContent = card.description;
 
-  // ID de la carte :
   clonedCardElement.setAttribute("id", `card-${card.id}`);
 
-  // Ajout de la copie du modèle
   cardsContainerElement.append(clonedCardElement);
 
-  // Écoute du clic pour la suppression de carte
   listenToClickOnDeleteCardButton(card.id);
 
-  // Écoute du clic pour la modification de carte
   listenToClickOnChangeCardButton(card.id);
-
-  // Réordonnement des cartes
+  
   orderCards(cardsContainerElement);
 }
 
-// Mise à jour du DOM de la carte
+/**
+ * Updates the DOM of a card with new data.
+ *
+ * @param {string} changeCardId - The ID of the card to update in the DOM.
+ * @param {Object} changeCardObject - An object containing updated card data.
+ * @param {string} changeCardObject.description - The updated description of the card.
+ */
 function updateCardDom(changeCardId, changeCardObject) {
   if (changeCardObject.description) {
     const updatedCard = document.querySelector(
@@ -215,6 +247,13 @@ function updateCardDom(changeCardId, changeCardObject) {
   }
 }
 
+/**
+ * Updates a card in the DOM with new data.
+ *
+ * @param {string} cardId - The ID of the card to update in the DOM.
+ * @param {Object} data - An object containing updated card data.
+ * @param {string} data.description - The updated description of the card.
+ */
 function updateCardInDOM(cardId, data){
   if (data.description){
     const cardSlotDescription = document.querySelector(`#card-${cardId} [slot="card-description"]`);

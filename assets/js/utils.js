@@ -4,10 +4,7 @@
 // Event Listening (sélection d'élément et mise en écoute d'évènement)
 // --------------------------------------
 export function listenToClickOnModalClosingElements(){
-  // récupérer les boutons concernés
   const closeElementList = document.querySelectorAll('.modal .close, .modal .modal-background');
-  // console.log(closeElementList);
-  // associer un écouteur d'évènement
   closeElementList.forEach((closeElement) => {
     closeElement.addEventListener('click', handleCloseModalClick);
   });

@@ -8,6 +8,7 @@ const labelController = require('./controllers/labelController')
 const projectController = require("./controllers/projectController");
 const userController = require('./controllers/userController');
 
+
 router.get("/", (req, res) => {
   res.sendFile('index.html', {root: './dist'});
 });
@@ -41,6 +42,13 @@ router.post("/project", projectController.createProject)
 // User 
 router.post('/register', userController.registerAction)
 router.post("/login", userController.loginAction);
+// Dans votre route ou middleware côté backend
+router.get('/getSessionData', (req, res) => {
+  const sessionData = req.session.user;
+  res.json(sessionData);
+});
+
+
 
 // 404 
 router.use((req, res) => {
