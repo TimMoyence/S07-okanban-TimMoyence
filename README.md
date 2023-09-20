@@ -1,32 +1,22 @@
-# S07 - oKanban - Frontend 
+# Projet Gestionnaire de Tâches - README
 
-## Préparation : intégration
 
-- La base de l'intégration est fournie dans le dossier `/docs/base-integration` de ce dépôt.
+## Description du Projet
 
-## Jour 1 : révisions & mise en place
+Le projet Gestionnaire de Tâches est une application web inspirée de Trello, conçue pour vous aider à organiser et gérer vos tâches et projets de manière efficace. Cette application offre un tableau de bord interactif où vous pouvez créer, suivre et prioriser vos tâches, collaborer avec d'autres utilisateurs et visualiser votre travail de manière claire et intuitive.
 
-- [Cours E01](docs/cours/E01.md)
-- [Challenge C01](docs/challenges/C01.md)
+## Fonctionnalités Principales
 
-## Jour 2 : fetch (get & post)
+- **Tableaux Personnalisés**: Créez des tableaux pour organiser vos tâches comme vous le souhaitez. Vous pouvez avoir un tableau pour chaque projet, ou pour tout ce que vous voulez suivre.
 
-- [Cours E02](docs/cours/E02.md)
-- [Challenge C02](docs/challenges/C02.md)
+- **Listes de Tâches**: Chaque tableau contient des listes de tâches. Ajoutez autant de listes que nécessaire pour diviser vos projets en étapes gérables.
 
-## Jour 3 : modules & bundlers
+- **Cartes de Tâches**: Créez des cartes pour chaque tâche ou élément à accomplir. Chaque carte peut être personnalisée avec des descriptions, des dates d'échéance, des étiquettes et plus encore.
 
-- [Cours E03](docs/cours/E03.md)
-- [Challenge C03](docs/challenges/C03.md)
+- **Glisser-Déposer Intuitif**: Organisez vos cartes en les faisant glisser d'une liste à l'autre ou d'un tableau à l'autre. Cela simplifie la gestion de vos tâches en cours.
 
-## Jour 4 : CRUD & drag'n'drop
 
-- [Cours E04](docs/cours/E04.md)
-- [Challenge C04](docs/challenges/C04.md)
+## Auteurs
 
-## Jour 5 : préparation de la mise en production
-
-- [Cours E05](docs/cours/E05.md)
-- Pas de challenge officiellement !
-- [Bonus possibles](docs/challenges/C05.md)
+- Tim Moyence
 
