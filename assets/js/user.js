@@ -2,7 +2,7 @@
 
 // Import des modules nécessaires
 import { closeModals } from "./utils.js";
-import { logIn, signUp, getSession } from "./api.js"
+import { logIn, signUp, fetchUserDataWithCookie } from "./api.js"
 // --------------------------------------
 // Event Listening (Écoute des événements)
 // --------------------------------------
@@ -27,6 +27,32 @@ export function listenToSubmintSignUpForm(){
     LogInFormElement.addEventListener("submit", handleSignUpFormSubmint);
 }
 
+// Appeler cette fonction dès que la page est chargée
+export function checkSessionAndSetUser() {
+  console.log("Je passe la 1")
+  const userToken = getSessionCookie(); // Utilisez une fonction pour récupérer le cookie de session
+    console.log("Je passe la 3")
+    console.log(userToken)
+  if (userToken) {  
+    console.log("Je passe la 4")
+    // Inclure le cookie dans les futures demandes
+    fetchUserDataWithCookie(userToken);
+  }
+}
+
+// Récupérer le cookie de session
+function getSessionCookie() {
+  const cookies = document.cookie.split(';');
+  console.log(cookies)
+  for (const cookie of cookies) {
+    const [name, value] = cookie.trim().split('=');
+    console.log(cookie)
+    if (name === 'userToken') {
+      return value;
+    }
+  }
+  return null;
+}
 // --------------------------------------
 // Event Handlers (Gestionnaires d'événements)
 // --------------------------------------
@@ -46,7 +72,6 @@ async function handleLogInFormSubmint(event){
 
   if (logInEffective) {
     updateButtonLoginCheck(logInEffective)
-    // Réinitialisation du formulaire et fermeture des modales
     logInFormElement.reset();
     closeModals();
   } else {
@@ -65,7 +90,6 @@ async function handleSignUpFormSubmint(event){
 
   if (signUpEffective) {
     console.log(signUpEffective)
-    // Réinitialisation du formulaire et fermeture des modales
     signUpFormElement.reset();
     closeModals();
   } else {
@@ -101,10 +125,10 @@ async function updateButtonLoginCheck(user){
   userIsConnected.classList.remove("is-hidden");
   const signUpButtonHide = document.querySelector(".signUp");
   signUpButtonHide.classList.add("is-hidden");
-  // integrer l'id dans userIsConnected
-  const sessionData = await getSession();
-  console.log("coucou", sessionData)
-  userIsConnected.innerHTML = sessionData
+  console.log(user.message)
+  userIsConnected.innerHTML = user.userName
+
+  console.log(user)
 }
 
 function updateTitleDom(newTitle){

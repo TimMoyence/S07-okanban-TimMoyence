@@ -80,8 +80,8 @@ export async function updateCard(cardId, newCardData) {
     const updatedCard = await response.json();
     return updatedCard;
   }
-  }
   return null;
+  }
 
 
 /**
@@ -231,8 +231,8 @@ export async function signUp(signUp){
     const signUpInformation = await response.json() 
     return signUpInformation;
     }
+    return null;
   };
-  return null;
 
 /**
  * Gets session data from the backend.
@@ -252,4 +252,19 @@ export async function getSession(){
    return getSessionData;
 };
 return null;
+}
+
+export async function fetchUserDataWithCookie(userToken) {
+  const response = await fetch(`${apiBaseUrl}/getSessionData`, {
+    headers: {
+      'Authorization': `Bearer ${userToken}`, // Utilisez l'en-tête d'autorisation approprié
+    },
+  });
+
+  if (response.ok) {
+    const getSessionData = await response.json();
+    return getSessionData;
+  }
+
+  return null;
 }

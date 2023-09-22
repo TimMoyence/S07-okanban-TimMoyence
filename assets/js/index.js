@@ -20,6 +20,7 @@ import {
   listenToSubmintLogInForm,
   listenToClickOnSignUp,
   listenToSubmintSignUpForm,
+  checkSessionAndSetUser
 } from "./user.js";
 
 
@@ -46,6 +47,7 @@ function listenToUserActions() {
 // Initialisation de l'application
 // --------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
+  checkSessionAndSetUser();
   listenToUserActions();
   // initLists();
 });

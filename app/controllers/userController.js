@@ -1,6 +1,8 @@
 const { User, Project, ProjectCollaborator } = require("../models")
 const bcrypt = require("bcrypt");
 const emailValidator = require("email-validator");
+const jwt = require('jsonwebtoken');
+const secretKey = 'votre-clé-secrète'; // Clé secrète pour signer le jeton
 
 const userController = {
 
@@ -96,22 +98,43 @@ const userController = {
 
           if (ok) {
             delete userExist.dataValues.password;
-            req.session.user = userExist;
+            req.session.user = userExist.dataValues;
+            // Après que l'utilisateur se soit connecté avec succès
+            // console.log(req.session.user)
+            const user = req.session.user; // L'utilisateur authentifié
 
-            console.log(req.session.user)
-            // ! Recuperer le user avec ses projet et les mettre a dispo dans le front
+            // Génération du jeton JWT
+            const token = jwt.sign({ user }, secretKey, { expiresIn: '7d' });
+
+            req.session.user = {
+              ...user, 
+              token: token, // Stockez le jeton dans la session
+            };
+
+            const Newuser = req.session.user
+            console.log(Newuser)
+            // Créer un cookie persistant avec une date d'expiration
+            const cookie = res.cookie('userToken', Newuser.token, {
+              maxAge: 7 * 24 * 60 * 60 * 1000, // Correspond à la durée de vie du cookie configurée dans express-session
+              httpOnly: true, // Assurez-vous que le cookie est sécurisé
+              // secure: true, // Décommentez ceci en production si vous utilisez HTTPS
+            });
+
+            console.log(cookie)
+
             const userWithProject = await User.findByPk(userExist.id, { 
                 include: {
                     association: 'project',
                     include: 'listName'
                 },
             })
+            
             return res.json({
                 message: "Vous êtes maintenant connecté, mais ne vous inquiétez pas, nous ne partagerons pas vos secrets avec le reste de l'univers, sauf si vous les avez déjà partagés sur les réseaux sociaux !",
                 userId: userExist.id,
                 userName: `${userExist.firstname} ${userExist.lastname}`,
                 listes : userWithProject.project[0].dataValues.listName,
-                projectId : userWithProject.project[0].dataValues.id
+                projectId : userWithProject.project[0].dataValues.id,
             });
           }
         } catch (e) {

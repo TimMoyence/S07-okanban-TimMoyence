@@ -9,7 +9,6 @@ const projectController = require("./controllers/projectController");
 const userController = require('./controllers/userController');
 const userMiddleware = require('./middleware/userMiddleware')
 
-
 router.use(userMiddleware)
 
 router.get("/", (req, res) => {
@@ -37,21 +36,25 @@ router.delete('/cards/:cardId/label/:labelId', labelController.removeLabelFromCa
 
 // Projet
 // Route permet de récupérer en fonction de l'ID mais si plusieurs projet il faut pouvoir laiszser au client le choix ? Menu déroulant ? 
-router.get("/project/:id", projectController.getProjectName);
+router.get('/project/:id', projectController.getProjectName);
 // Route permettant de créer un projet a appeler a la première connection (login)
-router.post("/project", projectController.createProject)
+router.post('/project', projectController.createProject)
 // Vu que l'on est sur une single page avec une seul application pour chaque personne il y aura un id de 1
 
 // User 
 router.post('/register', userController.registerAction)
-router.post("/login", userController.loginAction);
-// Dans votre route ou middleware côté backend
+router.post('/login', userController.loginAction);
 router.get('/getSessionData', (req, res) => {
-  const sessionData = req.session.user;
-  res.json(sessionData);
+  const userToken = req.headers.authorization; // Récupérez le jeton de session depuis les en-têtes
+
+  // Vérifiez le jeton de session et renvoyez les données de l'utilisateur appropriées
+  if (isValidSession(userToken)) {
+    const userData = getUserDataFromToken(userToken);
+    res.json(userData);
+  } else {
+    res.status(401).json({ message: 'Session non valide' });
+  }
 });
-
-
 
 // 404 
 router.use((req, res) => {

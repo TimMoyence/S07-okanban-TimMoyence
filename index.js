@@ -6,7 +6,7 @@ const cors = require('cors');
 const app = express();
 const router = require('./app/router.js');
 const userMiddleware = require('./app/middleware/userMiddleware.js')
-
+const cookieParser = require("cookie-parser");
 app.use(express.json());
 
 app.use(cors({
@@ -37,6 +37,7 @@ app.use(userMiddleware);
 
 // * permet d'obtenir req.body et de gérer les requêtes post au format formData
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 app.use(router);
 
