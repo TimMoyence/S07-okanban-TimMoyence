@@ -7,27 +7,41 @@ import { logIn, signUp, fetchUserDataWithCookie } from "./api.js"
 // Event Listening (Écoute des événements)
 // --------------------------------------
 
+/**
+ * Listener for a click on the login button.
+ */
 export function listenToClickOnLogIn(){
     const registerElement = document.querySelector(".logIn");
     registerElement.addEventListener("click", handleLogIn);
 }
 
+/**
+ * Listener for submitting the login form.
+ */
 export function listenToSubmintLogInForm(){
     const LogInFormElement = document.querySelector("#logIn-modal form");
     LogInFormElement.addEventListener("submit", handleLogInFormSubmint);
 }
 
+/**
+ * Listener for a click on the sign-up button.
+ */
 export function listenToClickOnSignUp(){
     const registerElement = document.querySelector(".signUp");
     registerElement.addEventListener("click", handleSignUp);
 }
 
+/**
+ * Listener for submitting the sign-up form.
+ */
 export function listenToSubmintSignUpForm(){
     const LogInFormElement = document.querySelector("#signUp-modal form");
     LogInFormElement.addEventListener("submit", handleSignUpFormSubmint);
 }
 
-// Appeler cette fonction dès que la page est chargée
+/**
+ * Call this function as soon as the page is loaded to check the session and set the user.
+ */
 export function checkSessionAndSetUser() {
   console.log("Je passe la 1")
   const userToken = getSessionCookie(); // Utilisez une fonction pour récupérer le cookie de session
@@ -40,7 +54,10 @@ export function checkSessionAndSetUser() {
   }
 }
 
-// Récupérer le cookie de session
+/**
+ * Retrieve the session cookie.
+ * @returns {string|null} The session cookie value or null if not found.
+ */
 function getSessionCookie() {
   const cookies = document.cookie.split(';');
   console.log(cookies)
@@ -57,11 +74,19 @@ function getSessionCookie() {
 // Event Handlers (Gestionnaires d'événements)
 // --------------------------------------
 
+/**
+ * Event handler for clicking the login button.
+ * @param {Event} event - Click event.
+ */
 function handleLogIn(event) {
   const logElementClick = event.target;
   openLogInModal(logElementClick);
 }
 
+/**
+ * Event handler for submitting the login form.
+ * @param {Event} event - Form submission event.
+ */
 async function handleLogInFormSubmint(event){
   event.preventDefault();
   const logInFormElement = document.querySelector("#logIn-modal form");
@@ -79,6 +104,10 @@ async function handleLogInFormSubmint(event){
   }
 }
 
+/**
+ * Event handler for submitting the sign-up form.
+ * @param {Event} event - Form submission event.
+ */
 async function handleSignUpFormSubmint(event){
   event.preventDefault();
   const signUpFormElement = document.querySelector("#signUp-modal form");
@@ -98,6 +127,10 @@ async function handleSignUpFormSubmint(event){
     
 }
 
+/**
+ * Event handler for clicking the sign-up button.
+ * @param {Event} event - Click event.
+ */
 function handleSignUp(event) {
   const SignUpElementClick = event.target;
   openSignUpModal(SignUpElementClick);
@@ -106,16 +139,27 @@ function handleSignUp(event) {
 // --------------------------------------
 // DOM Modification (Modification du DOM)
 // --------------------------------------
+
+/**
+ * Opens the login modal.
+ */
 function openLogInModal() {
   const addTitleModalElement = document.querySelector("#logIn-modal");
   addTitleModalElement.classList.add("is-active");
 }
 
+/**
+ * Opens the sign-up modal.
+ */
 function openSignUpModal(){
   const newUserModalElement = document.querySelector("#signUp-modal");
   newUserModalElement.classList.add("is-active")
 }
 
+/**
+ * Updates the visibility of login and logout buttons and displays the user's name.
+ * @param {Object} user - User object with user data.
+ */
 async function updateButtonLoginCheck(user){
   const loginButtonHide = document.querySelector(".logIn");
   loginButtonHide.classList.add("is-hidden");
@@ -131,6 +175,10 @@ async function updateButtonLoginCheck(user){
   console.log(user)
 }
 
+/**
+ * Updates the document title in the DOM.
+ * @param {Object} newTitle - New document title.
+ */
 function updateTitleDom(newTitle){
     const titleElement = document.querySelector(".title");
     titleElement.textContent = newTitle.description;

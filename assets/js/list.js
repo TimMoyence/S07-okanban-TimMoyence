@@ -1,6 +1,3 @@
-// Ensemble de fonctions permettant la gestion des listes et des cartes
-
-// Import des modules nécessaires
 import { closeModals } from "./utils.js";
 import { listenToClickOnAddCardButton, addCardToList } from "./card.js";
 import {
@@ -16,19 +13,25 @@ import Sortable from "sortablejs";
 // Event Listening (Écoute des événements)
 // --------------------------------------
 
-// Écouteur de clic sur le bouton d'ajout de liste
+/**
+ * Listener for a click on the add list button.
+ */
 export function listenToClickOnAddListButton() {
   const addListButtonElement = document.querySelector("#addlist-button");
   addListButtonElement.addEventListener("click", handleAddListButtonClick);
 }
 
-// Écouteur de soumission du formulaire d'ajout de liste
+/**
+ * Listener for submitting the add list form.
+ */
 export function listenToSubmitOnAddListForm() {
   const addListFormElement = document.querySelector("#add-list-modal form");
   addListFormElement.addEventListener("submit", handleAddListFormSubmit);
 }
 
-// Écouteur de soumission du formulaire de modification de liste
+/**
+ * Listener for submitting the change list form.
+ */
 export function listenToSubmitOnChangeListForm() {
   const changeListFormElement = document.querySelector(
     "#change-list-modal form"
@@ -36,7 +39,10 @@ export function listenToSubmitOnChangeListForm() {
   changeListFormElement.addEventListener("submit", handleChangeListFormSubmit);
 }
 
-// Écouteur de clic sur le nom de la liste pour la modifier
+/**
+ * Listener for clicking on the list name to edit it.
+ * @param {Object} list - Object representing a list.
+ */
 function listenToClickOnChangeListButton(list) {
   const changeListButtonElement = document.querySelector(
     `#list-${list.id} [slot='list-name']`
@@ -47,7 +53,10 @@ function listenToClickOnChangeListButton(list) {
   );
 }
 
-// Écouteur de clic sur le bouton de suppression de liste
+/**
+ * Listener for clicking on the delete list button.
+ * @param {Object} list - Object representing a list.
+ */
 function listenToClickOnDeleteListButton(list) {
   const deleteListButtonElement = document.querySelector(
     `#list-${list} [slot='remove-list-button']`
@@ -58,7 +67,9 @@ function listenToClickOnDeleteListButton(list) {
   );
 }
 
-// Écouteur de glisser-déposer pour les listes
+/**
+ * Listener for drag and drop events on lists.
+ */
 export function listenToDragOnList() {
   const listsContainerElement = document.querySelector("#lists-container");
   Sortable.create(listsContainerElement, {
@@ -71,34 +82,36 @@ export function listenToDragOnList() {
 // Event Handlers (Gestionnaires d'événements)
 // --------------------------------------
 
-// Gestionnaire de clic sur le bouton d'ajout de liste
+/**
+ * Event handler for clicking the add list button.
+ */
 function handleAddListButtonClick() {
   openAddListModal();
 }
 
-// Gestionnaire de clic sur le nom de la liste pour la modifier
+/**
+ * Event handler for clicking on the list name to edit it.
+ * @param {Event} event - Click event.
+ */
 function handleChangeListButtonClick(event) {
-  // Récupération du nom de la liste à partir de l'événement
   const listName = event.currentTarget;
-
-  // Mise à jour du champ de formulaire pour le changement de nom
   const changeListFormElement = document.querySelector(
     "#change-list-modal form .name-input"
   );
   changeListFormElement.placeholder = listName.innerHTML;
-
-  // Récupération de l'ID de la liste
   const listIdElement = listName.closest(".list");
   const listId = Number(listIdElement.id.substring(5));
 
   openChangeListModal(listId);
 }
 
-// Gestionnaire de soumission du formulaire d'ajout de liste
+/**
+ * Event handler for submitting the add list form.
+ * @param {Event} event - Form submission event.
+ */
 async function handleAddListFormSubmit(event) {
   event.preventDefault();
 
-  // Récupération des données du formulaire
   const addListFormElement = document.querySelector("#add-list-modal form");
   const addListFormData = new FormData(addListFormElement);
   const listToAdd = Object.fromEntries(addListFormData);
@@ -106,10 +119,8 @@ async function handleAddListFormSubmit(event) {
   const newList = await createList(listToAdd);
 
   if (newList) {
-    // Mise à jour de l'interface utilisateur avec les données de la liste créée
     addListToListsContainer(newList);
 
-    // Réinitialisation du formulaire et fermeture des modales
     addListFormElement.reset();
     closeModals();
   } else {
@@ -117,11 +128,12 @@ async function handleAddListFormSubmit(event) {
   }
 }
 
-// Gestionnaire de soumission du formulaire de modification de liste
+/**
+ * Event handler for submitting the change list form.
+ * @param {Event} event - Form submission event.
+ */
 async function handleChangeListFormSubmit(event) {
   event.preventDefault();
-
-  // Récupération des données du formulaire
   const changeListFormElement = document.querySelector(
     "#change-list-modal form"
   );
@@ -132,10 +144,8 @@ async function handleChangeListFormSubmit(event) {
   const newList = await changeList(listId, listToChange);
 
   if (newList) {
-    // Mise à jour de l'interface utilisateur avec les données de la liste modifiée
     updateListDom(listId, listToChange);
 
-    // Réinitialisation du formulaire et fermeture des modales
     changeListFormElement.reset();
     closeModals();
   } else {
@@ -143,7 +153,10 @@ async function handleChangeListFormSubmit(event) {
   }
 }
 
-// Gestionnaire de fin de glisser-déposer pour les listes
+/**
+ * Event handler for the end of a list drag and drop.
+ * @param {Object} evt - Object representing the drag and drop event.
+ */
 async function handleListDragEnd(evt) {
   const listElementList = document.querySelectorAll(".list");
 
@@ -157,7 +170,10 @@ async function handleListDragEnd(evt) {
   }
 }
 
-// Gestionnaire de clic sur le bouton de suppression de liste
+/**
+ * Event handler for clicking the delete list button.
+ * @param {Event} event - Click event.
+ */
 async function handleDeleteListButtonClick(event) {
   const clickOnDeleteButton = event.currentTarget;
   const listDeleteElement = clickOnDeleteButton.closest("[slot='list-id']");
@@ -176,7 +192,9 @@ async function handleDeleteListButtonClick(event) {
 // DOM Modification (Modification du DOM)
 // --------------------------------------
 
-// Initialisation des listes à partir des données de l'API
+/**
+ * Initializes lists from API data.
+ */
 export async function initLists() {
   const lists = await getLists();
 
@@ -185,31 +203,36 @@ export async function initLists() {
   });
 }
 
-// Ouverture de la modale d'ajout de liste
+/**
+ * Opens the add list modal.
+ */
 function openAddListModal() {
   const addListModalElement = document.querySelector("#add-list-modal");
   addListModalElement.classList.add("is-active");
 }
 
-// Ouverture de la modale de modification de liste
+/**
+ * Opens the change list modal.
+ * @param {number} listId - ID of the list to edit.
+ */
 function openChangeListModal(listId) {
   const changeListModalElement = document.querySelector("#change-list-modal");
   changeListModalElement.classList.add("is-active");
 
-  // Indication de l'identifiant de la liste dans le champ caché du formulaire
   const listIdFormInputElement =
     changeListModalElement.querySelector("[name='list_id']");
   listIdFormInputElement.value = listId;
 }
 
-// Ajout d'une liste dans le conteneur de listes
+/**
+ * Adds a list to the list container.
+ * @param {Object} list - Object representing a list.
+ */
 function addListToListsContainer(list) {
-  // Récupération du modèle de liste
   const listTemplate = document.querySelector("#list-template");
   const listTemplateContent = listTemplate.content;
   const clonedListTemplate = listTemplateContent.cloneNode(true);
 
-  // Modification du modèle avec les informations de la liste à créer
     const slotListNameElement =
     clonedListTemplate.querySelector("[slot='list-name']");
   slotListNameElement.textContent = list.name;
@@ -218,20 +241,15 @@ function addListToListsContainer(list) {
     clonedListTemplate.querySelector("[slot='list-id']");
   slotListIdElement.setAttribute("id", `list-${list.id}`);
 
-  // Récupération du conteneur de listes
   const listsContainerElement = document.querySelector("#lists-container");
   listsContainerElement.append(clonedListTemplate);
 
-  // Écoute du clic sur le bouton d'ajout de carte lors de la création de la liste
   listenToClickOnAddCardButton(list.id);
 
-  // Écoute du clic sur le titre de la liste pour la modifier
   listenToClickOnChangeListButton(list);
 
-  // Écoute du clic sur le bouton de suppression de liste
   listenToClickOnDeleteListButton(list.id);
 
-  // Création des cartes associées à la liste si elles existent
   if (list.cards) {
     list.cards.forEach((card) => {
       addCardToList(card);
@@ -252,7 +270,11 @@ function addListToListsContainer(list) {
   });
 }
 
-// Mise à jour du DOM de la liste
+/**
+ * Updates the list's DOM representation.
+ * @param {number} listId - ID of the list to update.
+ * @param {Object} listToChange - Object representing the changes to apply to the list.
+ */
 function updateListDom(listId, listToChange) {
   if (listToChange.name) {
     const listSlotName = document.querySelector(
@@ -262,7 +284,10 @@ function updateListDom(listId, listToChange) {
   }
 }
 
-// Réordonner les cartes dans une liste
+/**
+ * Reorders cards within a list.
+ * @param {HTMLElement} cardsDestination - Container for cards within the list.
+ */
 export async function orderCards(cardsDestination) {
   const cardsElementInList = cardsDestination.querySelectorAll(".card");
   const listElement = cardsDestination.closest(".list");
