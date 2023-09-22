@@ -99,13 +99,12 @@ async function updateButtonLoginCheck(user){
   logoutButtonSee.classList.remove("is-hidden");
   const userIsConnected = document.querySelector(".user");
   userIsConnected.classList.remove("is-hidden");
-  userIsConnected.innerHTML = user.userName
   const signUpButtonHide = document.querySelector(".signUp");
   signUpButtonHide.classList.add("is-hidden");
   // integrer l'id dans userIsConnected
   const sessionData = await getSession();
-  console.log(sessionData)
-
+  console.log("coucou", sessionData)
+  userIsConnected.innerHTML = sessionData
 }
 
 function updateTitleDom(newTitle){

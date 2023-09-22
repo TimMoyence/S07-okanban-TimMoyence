@@ -7,7 +7,10 @@ const listController = require('./controllers/listController')
 const labelController = require('./controllers/labelController')
 const projectController = require("./controllers/projectController");
 const userController = require('./controllers/userController');
+const userMiddleware = require('./middleware/userMiddleware')
 
+
+router.use(userMiddleware)
 
 router.get("/", (req, res) => {
   res.sendFile('index.html', {root: './dist'});
