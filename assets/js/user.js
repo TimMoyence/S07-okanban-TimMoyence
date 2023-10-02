@@ -43,12 +43,10 @@ export function listenToSubmintSignUpForm(){
  * Call this function as soon as the page is loaded to check the session and set the user.
  */
 export function checkSessionAndSetUser() {
-  console.log("Je passe la 1")
   const userToken = getSessionCookie(); // Utilisez une fonction pour récupérer le cookie de session
-    console.log("Je passe la 3")
     console.log(userToken)
   if (userToken) {  
-    console.log("Je passe la 4")
+    console.log("Pourquoi tu rentre pas ici ?")
     // Inclure le cookie dans les futures demandes
     fetchUserDataWithCookie(userToken);
   }
@@ -60,15 +58,13 @@ export function checkSessionAndSetUser() {
  */
 function getSessionCookie() {
   const cookies = document.cookie.split(';');
-  console.log(cookies)
   for (const cookie of cookies) {
     const [name, value] = cookie.trim().split('=');
-    console.log(cookie)
     if (name === 'userToken') {
       return value;
     }
   }
-  return null;
+  return name;
 }
 // --------------------------------------
 // Event Handlers (Gestionnaires d'événements)
@@ -118,7 +114,6 @@ async function handleSignUpFormSubmint(event){
   const signUpEffective = await signUp(signUpObject);
 
   if (signUpEffective) {
-    console.log(signUpEffective)
     signUpFormElement.reset();
     closeModals();
   } else {
@@ -169,6 +164,7 @@ async function updateButtonLoginCheck(user){
   userIsConnected.classList.remove("is-hidden");
   const signUpButtonHide = document.querySelector(".signUp");
   signUpButtonHide.classList.add("is-hidden");
+
   console.log(user.message)
   userIsConnected.innerHTML = user.userName
 

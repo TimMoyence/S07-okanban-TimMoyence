@@ -10,13 +10,13 @@ const cookieParser = require("cookie-parser");
 app.use(express.json());
 
 app.use(cors({
-    origin: '*', // avec cette configuration (ou pas de configuration du tout), on autorise l'acces à nos ressources depuis n'importe quelle origine
-    /*
-    Pour autoriser seulement les requêtes depuis les domaines http://127.0.0.1:5501, http://127.0.0.1:5500 et http://www.monsite.com on utiliserait la configuration ci-dessous :
-    origin: ['http://127.0.0.1:5501', 'http://127.0.0.1:5500', 'http://www.monsite.com'],
+    // origin: '*', // avec cette configuration (ou pas de configuration du tout), on autorise l'acces à nos ressources depuis n'importe quelle origine
+    
+    // Pour autoriser seulement les requêtes depuis les domaines http://127.0.0.1:5501, http://127.0.0.1:5500 et http://www.monsite.com on utiliserait la configuration ci-dessous :
+    origin: ['http://localhost:5001 ', 'http://localhost:5173', 'http://localhost:5001/login '],
 
-    Note, en production, il est conseillé de règler finement notre politique de CORS.
-    */
+    // Note, en production, il est conseillé de règler finement notre politique de CORS.
+    
 }));
 
 app.use(express.static("dist"));

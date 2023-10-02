@@ -112,16 +112,12 @@ const userController = {
             };
 
             const Newuser = req.session.user
-            console.log(Newuser)
             // Créer un cookie persistant avec une date d'expiration
             const cookie = res.cookie('userToken', Newuser.token, {
               maxAge: 7 * 24 * 60 * 60 * 1000, // Correspond à la durée de vie du cookie configurée dans express-session
               httpOnly: true, // Assurez-vous que le cookie est sécurisé
-              // secure: true, // Décommentez ceci en production si vous utilisez HTTPS
+              secure: true, // Décommentez ceci en production si vous utilisez HTTPS
             });
-
-            console.log(cookie)
-
             const userWithProject = await User.findByPk(userExist.id, { 
                 include: {
                     association: 'project',

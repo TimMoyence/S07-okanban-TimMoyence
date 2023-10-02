@@ -200,6 +200,7 @@ export async function getProject(id) {
 export async function logIn(log){
   const response = await fetch(`${apiBaseUrl}/login`, {
     method: "POST",
+    credentials: 'include',
     body: JSON.stringify(log),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
@@ -241,7 +242,7 @@ export async function signUp(signUp){
  * @returns {Promise<Object | null>} A promise resolved with session data or null in case of failure.
  */
 export async function getSession(){
- const response = await fetch(`${apiBaseUrl}/getSessionData`);
+ const response = await fetch(`${apiBaseUrl}/getSessionData`, {credentials: 'include'});
  if (response.ok) {
    console.log('JE PASSE PAR LA ')
    const getSessionData = await response.json()
@@ -259,7 +260,7 @@ export async function fetchUserDataWithCookie(userToken) {
     headers: {
       'Authorization': `Bearer ${userToken}`, // Utilisez l'en-tête d'autorisation approprié
     },
-  });
+  }, {credentials: 'include'});
 
   if (response.ok) {
     const getSessionData = await response.json();
